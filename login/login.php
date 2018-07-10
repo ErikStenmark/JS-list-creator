@@ -18,8 +18,6 @@ if ($result[0] == true) {
 			
 			header("location: index.php");
 
-
-	
 } else {
 	
 	if($result[1] == "notfound") {
