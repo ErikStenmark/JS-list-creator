@@ -5,7 +5,8 @@ A simple list creating app written in PHP / vanilla JavaScript and using a SQLit
 ----
 ## usage
 1. Create file: class/Dbconf.php
-2. Add following code to file:```php
+2. Add following code to file:
+```php
 <?php
 // Enter correct Database Path:
 define('DB_PATH', $_SERVER['DOCUMENT_ROOT'] . '/[PROJECT ROOT FOLDER]/db/[DB NAME].db');
