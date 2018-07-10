@@ -65,7 +65,7 @@ class Listmapper {
 	}
 	
 	private function db_update_item_positions($listarray) {
-		// FixMe: For with count is expensive (foreach or while)
+		// FixMe: For with count should be replaced
 		for ($i = 0; $i < count($listarray); $i++) {
 			$data['position'] = $listarray[$i]['position'];
 			$itemid = $listarray[$i]['id'];

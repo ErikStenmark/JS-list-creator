@@ -47,6 +47,7 @@ class Checklist {
 	
 	public function removeItem($itemposition) {
 		array_splice($this->items, $itemposition, 1);
+		// FixMe: for with count should be replaced.
 		for ($i = 0; $i < count($this->items); $i++) {
 			$this->items[$i]['position'] = $i;
 		}
