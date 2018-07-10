@@ -1,0 +1,230 @@
+@import 'https://fonts.googleapis.com/css?family=Lato:400,700';
+
+* {
+	padding: 0;
+	margin: 0;
+}
+
+html, body {
+	height: 100%;
+}
+
+body {
+	font-family: 'Lato', sans-serif;
+}
+
+.wrapper {
+   min-height:100%;
+   position:relative;
+}
+
+/*********
+* Navbar *
+*********/
+
+/* Navbar container */
+.navbar {
+  overflow: hidden;
+  background-color: #333;
+  font-family: Arial;
+}
+
+/* Links inside the navbar */
+.navbar a {
+  float: left;
+  font-size: 16px;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* The dropdown container */
+.dropdown {
+  float: right;
+  overflow: hidden;
+}
+
+/* Dropdown button */
+.dropdown .dropbtn {
+  font-size: 16px; 
+  width: 160px;
+  border: none;
+  outline: none;
+  color: white;
+  padding: 14px 16px;
+  background-color: inherit;
+  border-radius: 0;
+  font-family: inherit; /* Important for vertical align on mobile phones */
+  margin: 0; /* Important for vertical align on mobile phones */
+}
+
+/* Add a red background color to navbar links on hover */
+.navbar a:hover, .dropdown:hover .dropbtn {
+  background-color: #508abc;;
+}
+
+/* Dropdown content (hidden by default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  right: 0;
+  width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+/* Add a grey background color to dropdown links on hover */
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/**********
+* Content *
+**********/
+
+.container {
+	margin: 2em 5em auto 5em;
+	padding-bottom: 10rem;
+}
+
+/***********
+* List-App *
+***********/
+
+h1 {
+  margin-bottom: 0;
+}
+
+.nameDisplay, .listName {
+	margin-bottom: 1.5em;
+}
+
+.listName img {
+	margin-right: .5em;
+}
+
+.editNameIcon {
+	margin-left: 1em;
+}
+
+h1 + p {
+  font-size: 1.08em;
+  color: #637a91;
+  margin-top: .5em;
+  margin-bottom: 2.65em;
+  padding-bottom: 1.325em;
+  border-bottom: 1px dotted;
+}
+
+ul {
+  padding-left: 0;
+  list-style: none;
+}
+
+li {
+  padding: .45em .5em;
+  margin-bottom: .35em;
+  display: flex;
+  align-items: center;
+}
+
+input, button {
+  font-size: .85em;
+  padding: .65em 1em;
+  border-radius: .3em;
+  outline: 0;
+  width: 200px;
+}
+
+input {
+  border: 1px solid #dcdcdc;
+  margin-right: 1em;
+}
+
+button {
+  color: white;
+  background: #508abc;
+  border: solid 1px;
+  border-color: rgba(0, 0, 0, .1);
+  cursor: pointer;
+  width: 150px;
+}
+
+button + button {
+  margin-left: .5em;
+}
+
+p + button {
+  background: #52bab3;
+}
+
+.list {
+	margin-bottom: 1.5em;
+}
+
+.list button + button {
+  background: #768da3;
+}
+
+.list li button + button {
+  background: #508abc;
+}
+
+li button:first-child {
+  margin-left: auto;
+  background: #52bab3;
+}
+
+.list li button:last-child {
+  background: #768da3;
+}
+
+li button {
+  font-size: .75em;
+  padding: .5em .65em;
+}
+
+.list ul li span {
+	display: none;
+	margin-left: auto;
+}
+
+.list ul li span img{
+	margin-right: 1em;
+}
+
+.highlight {
+	background-color: lightblue;
+}
+
+/*********
+* Footer *
+*********/
+
+.footer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 1rem;
+  background-color: #444;
+  color: #999;
+  text-align: center;
+}
