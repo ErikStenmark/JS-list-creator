@@ -6,7 +6,6 @@ if (isset($_GET['listid'])) {
 } else {
 	unset($_SESSION['list']);
 }
-
 ?>
 
 <!doctype html>

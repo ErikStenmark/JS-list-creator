@@ -47,9 +47,8 @@ class Checklist {
 	
 	public function removeItem($itemposition) {
 		array_splice($this->items, $itemposition, 1);
-		// FixMe: for with count should be replaced.
-		for ($i = 0; $i < count($this->items); $i++) {
-			$this->items[$i]['position'] = $i;
+		foreach ($this->items as $k => $v) {
+			$this->items[$k]['position'] = $k;
 		}
 		return $this->items;
 	}
@@ -62,7 +61,6 @@ class Checklist {
 			$this->items[$itemposition]['position']++;
 			$this->items[$itemposition + 1]['position']--;
 		}
-		
 		foreach ($this->items as $k => $v) {
 			$newarr[$v['position']] = $this->items[$k];
 		}
@@ -71,5 +69,4 @@ class Checklist {
 		return $this->items;
 	}
 }
-
 ?>

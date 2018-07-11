@@ -38,6 +38,9 @@ class Dbh {
 			if ($what == null) {
 				$sql = "SELECT * from $table WHERE $field = ?";
 			} else {
+				if (is_array($what)) {
+					$what = implode(", ", $what);
+				}
 				$sql = "SELECT $what from $table WHERE $field = ?";
 			}
 			if ($orderby != null) {

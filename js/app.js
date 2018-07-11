@@ -60,21 +60,12 @@ function ajax(action, arg){
 			} if (action == nameSpan) {
 				nameSpan.innerHTML = return_data;
 			}
-			
-			// Del (no ajax action, only DB)
-			// if (action == 'del' && string == 'item') {
-				// var body = document.getElementsByTagName('body')[0];
-				// var div = document.createElement('div');
-				// div.innerHTML = return_data;
-				// body.appendChild(div);
-			// }
-			
-			// Moving item (no ajax action, only DB)
 		}
 	}
     hr.send(vars);
 }
 
+// Adding move and del buttons to list items
 function attachListItemButtons(li) {
 	let span = document.createElement('span');
 	span.className = 'listButtons';
@@ -99,6 +90,7 @@ function attachListItemButtons(li) {
 	span.appendChild(remove);
 }
 
+// Get index of list item for position
 function GetIndex(sender) {   
     var liElements = sender.parentNode.getElementsByTagName("li");
     var liElementsLength = liElements.length;
@@ -111,6 +103,7 @@ function GetIndex(sender) {
     }
 }
 
+// Toggle displaying or edit list name
 function toggleNameEdit(bool) {
 	if (bool == true) {
 		editNameField.style.display = 'block';
@@ -121,8 +114,7 @@ function toggleNameEdit(bool) {
 	}
 }
 
-
-
+// Name list button event listener
 nameButton.addEventListener('click', () => {
 	if(nameInput.value.replace(/\s/g, '').length) {
 		toggleNameEdit(false);
@@ -131,22 +123,26 @@ nameButton.addEventListener('click', () => {
 	}
 });
 
+// Adding list item buttons for pre-existing list items
 for (let i = 0; i < lis.length; i++) {
 	attachListItemButtons(lis[i]);
 }
 
+// Show list name buttons
 displayNameField.addEventListener('mouseover', () => {
 	displayNameField.className = 'listName highlight';
 	editNameIcon.style.display = 'inline';
 	delListIcon.style.display = 'inline';
 });
 
+// Hide list name buttons
 displayNameField.addEventListener('mouseout', () => {
 	displayNameField.className = 'listName';
 	editNameIcon.style.display = 'none';
 	delListIcon.style.display = 'none';
 });
 
+// Click listener for list name buttons
 displayNameField.addEventListener('click', (event) => {
 	if (event.target == editNameIcon) {
 		nameInput.value = nameSpan.innerHTML;
@@ -163,11 +159,12 @@ displayNameField.addEventListener('click', (event) => {
 			while (listUl.firstChild) {
 				listUl.removeChild(listUl.firstChild);
 			}
-			nameInput.focus();
+			window.location.replace("index.php");
 		}
 	}
 });
 
+// Keyboard enter listener for naming list
 editNameField.addEventListener('keyup', (event) => {
 	event.preventDefault();
 	if (event.keyCode === 13) {
@@ -175,6 +172,7 @@ editNameField.addEventListener('keyup', (event) => {
 	}
 });
 
+// Click listener for adding list item button
 addItemButton.addEventListener('click', () => {
 	if(addItemInput.value.replace(/\s/g, '').length) {
 		ajax('ul', addItemInput.value);
@@ -183,6 +181,7 @@ addItemButton.addEventListener('click', () => {
 	}
 });
 
+// Keyboard enter listener for adding list item
 addItemInput.addEventListener('keyup', (event) => {
 	event.preventDefault();
 	if (event.keyCode === 13) {
@@ -190,6 +189,7 @@ addItemInput.addEventListener('keyup', (event) => {
 	}
 });
 
+// Click listener for list item buttons
 listUl.addEventListener('click', (event) => {
 	if (event.target.tagName == 'IMG') {
 		let li = event.target.parentNode.parentNode;
@@ -204,8 +204,8 @@ listUl.addEventListener('click', (event) => {
 		if (event.target.className == 'up') {
 			let prevLi = li.previousElementSibling;
 			let ul = li.parentNode;
-			ajax('up', position);
 			if (prevLi) {
+				ajax('up', position);
 				ul.insertBefore(li, prevLi);
 			}	
 			document.body.style.cursor='default';
@@ -213,8 +213,8 @@ listUl.addEventListener('click', (event) => {
 		if (event.target.className == 'down') {
 			let nextLi = li.nextElementSibling;
 			let ul = li.parentNode;
-			ajax('down', position);
 			if (nextLi) {
+				ajax('down', position);
 				ul.insertBefore(nextLi, li);
 			}
 			document.body.style.cursor='default';
@@ -222,9 +222,8 @@ listUl.addEventListener('click', (event) => {
 	}
 });
 
+// Mouse over listener for list items
 listUl.addEventListener('mouseover', (event) => {
-	
-	
 	if(event.target.tagName == 'LI') {
 		GetIndex(event.target);
 		event.target.className = 'highlight';
@@ -241,6 +240,7 @@ listUl.addEventListener('mouseover', (event) => {
 	}
 });
 
+// Mouse out listener for list items
 listUl.addEventListener('mouseout', (event) => {
 	if(event.target.tagName == 'LI') {
 		event.target.className = '';
