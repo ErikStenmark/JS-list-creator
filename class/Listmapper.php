@@ -66,7 +66,6 @@ class Listmapper {
 	
 	// Updates list item positions in DB when moving or deleting items
 	private function db_update_item_positions($listarray) {
-		// FixMe: For with count should be replaced
 		foreach ($listarray as $item) {
 			$data['position'] = $item['position'];
 			$this->db->update('listitems', $item['id'], $data);
@@ -117,13 +116,14 @@ class Listmapper {
 	// Get saved list
 	public function get_saved_list($id) {
 		$listobject = new Checklist($this->db->select('lists', $id)[0]);
-		$select = array('id', 'position', 'item');
-		$data['items'] = $this->db->select('listitems', $id, 'listid', $select, 'position');
+		if ($listobject->getUserId() == $this->userid) {
+			$select = array('id', 'position', 'item');
+			$data['items'] = $this->db->select('listitems', $id, 'listid', $select, 'position');
 
-		$listobject->setValues($data);
-		return $listobject;
+			$listobject->setValues($data);
+			return $listobject;
+		}
 	}
-	
 }
 
 ?>

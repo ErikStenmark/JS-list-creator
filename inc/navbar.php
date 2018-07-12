@@ -1,7 +1,7 @@
 <header>
 	<div class="navbar">
-		<a href="#home">Home</a>
-		<a href="#news">News</a>
+		<a href="#home">Link 1</a>
+		<a href="#news">Link 2</a>
 		<div class="dropdown">
 			<button class="dropbtn"><?php echo $username; ?></button>
 			<div class="dropdown-content">

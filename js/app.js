@@ -11,16 +11,20 @@ const listDiv = document.querySelector('.list');
 const listUl = listDiv.querySelector('ul');
 const lis = listUl.children;
 
+if (displayNameField.textContent != '') {
+	toggleNameEdit(false);
+}
+
 nameInput.focus();
 
 function ajax(action, arg){
 	arg = arg || 0;
     var hr = new XMLHttpRequest();
-    var url = "listdatahandler.php";
+    var url = "inc/listdatahandler.php";
 	
 	// Naming list
 	if (action == nameSpan) {
-		var vars = "name=" + encodeURIComponent(arg);
+		var vars = "name=" + arg;
 	
 	// Deleting list
 	} else if (action == 'dellist') {
@@ -53,8 +57,9 @@ function ajax(action, arg){
 				var ul = document.getElementsByTagName('ul')[0];
 				var li = document.createElement('li');
 				li.textContent = return_data;
-				attachListItemButtons(li);
 				ul.appendChild(li);
+				attachListItemButtons(li);
+				evalListButtons(li.previousElementSibling);
 				
 			// Editing list name
 			} if (action == nameSpan) {
@@ -63,6 +68,29 @@ function ajax(action, arg){
 		}
 	}
     hr.send(vars);
+}
+
+function evalListButtons(li) {
+	let buttons = li.querySelector('span.listButtons');
+	let up = buttons.querySelector('img.up');
+	let down = buttons.querySelector('img.down');
+	
+	if (li == li.parentNode.firstElementChild) {
+		up.style.display = 'none';
+	} else {
+		up.style.display = 'inline';
+	}	
+	if (li == li.parentNode.lastElementChild) {
+		down.style.display = 'none';
+	} else {
+		down.style.display = 'inline';
+	}
+}
+
+function updateListButtons() {
+	for (let i = 0; i < lis.length; i++) {
+		evalListButtons(lis[i]);
+	}
 }
 
 // Adding move and del buttons to list items
@@ -88,6 +116,8 @@ function attachListItemButtons(li) {
 	remove.style.height = '1em';
 	remove.src = 'img/del.png';
 	span.appendChild(remove);
+	
+	evalListButtons(li);
 }
 
 // Get index of list item for position
@@ -219,6 +249,7 @@ listUl.addEventListener('click', (event) => {
 			}
 			document.body.style.cursor='default';
 		}
+		updateListButtons();
 	}
 });
 

@@ -5,7 +5,7 @@
 - Echos sanitized userinput back to JS.
 */
 
-include 'inc/config.php';
+include 'config.php';
 $listmapper = new Listmapper(new Dbh(), $userid);
 
 if (isset($_SESSION['list']) && $_SESSION['list'] != null) {

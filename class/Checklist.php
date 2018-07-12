@@ -37,6 +37,10 @@ class Checklist {
 		return $this->id;
 	}
 	
+	public function getUserId() {
+		return $this->userid;
+	}
+	
 	public function getName() {
 		return $this->name;
 	}
