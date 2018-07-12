@@ -59,7 +59,9 @@ function ajax(action, arg){
 				li.textContent = return_data;
 				ul.appendChild(li);
 				attachListItemButtons(li);
-				evalListButtons(li.previousElementSibling);
+				if (li.previousElementSibling != null) {
+					evalListButtons(li.previousElementSibling);
+				}
 				
 			// Editing list name
 			} if (action == nameSpan) {
