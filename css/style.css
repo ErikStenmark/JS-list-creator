@@ -145,12 +145,15 @@ li {
   align-items: center;
 }
 
-input, button {
+input[type]:not([type=checkbox]), button {
   font-size: .85em;
   padding: .65em 1em;
   border-radius: .3em;
   outline: 0;
   width: 200px;
+}
+input[type=checkbox] {
+	transform:scale(1.2, 1.2);
 }
 
 input {

@@ -97,6 +97,8 @@ function updateListButtons() {
 
 // Adding move and del buttons to list items
 function attachListItemButtons(li) {
+	let text = '<input type="checkbox">';
+	li.insertAdjacentHTML('afterbegin', text);
 	let span = document.createElement('span');
 	span.className = 'listButtons';
 	li.appendChild(span);
@@ -222,7 +224,7 @@ addItemInput.addEventListener('keyup', (event) => {
 });
 
 // Click listener for list item buttons
-listUl.addEventListener('click', (event) => {
+listUl.addEventListener('click', (event) => {	
 	if (event.target.tagName == 'IMG') {
 		let li = event.target.parentNode.parentNode;
 		let position = GetIndex(li);
@@ -262,6 +264,10 @@ listUl.addEventListener('mouseover', (event) => {
 		event.target.className = 'highlight';
 		event.target.querySelector('span').style.display = 'inline';
 	}
+	if (event.target.tagName == 'INPUT') {
+		event.target.parentNode.className = 'highlight';
+		event.target.parentNode.querySelector('span').style.display = 'inline';
+	}
 	if(event.target.tagName == 'SPAN') {
 		event.target.parentNode.className = 'highlight';
 		event.target.style.display = 'inline';
@@ -278,6 +284,10 @@ listUl.addEventListener('mouseout', (event) => {
 	if(event.target.tagName == 'LI') {
 		event.target.className = '';
 		event.target.querySelector('span').style.display = 'none';
+	}
+	if (event.target.tagName == 'INPUT') {
+		event.target.parentNode.className = '';
+		event.target.parentNode.querySelector('span').style.display = 'none';
 	}
 	if(event.target.tagName == 'SPAN') {
 		event.target.parentNode.className = '';
