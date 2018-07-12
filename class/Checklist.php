@@ -49,6 +49,15 @@ class Checklist {
 		return $this->items;
 	}
 	
+	public function checkItem($itemposition, $action) {
+		if ($action == 'check') {
+			$this->items[$itemposition]['checked'] = 1;
+		} else {
+			$this->items[$itemposition]['checked'] = 0;
+		}
+		return $this->items[$itemposition]['id'];
+	}
+	
 	public function removeItem($itemposition) {
 		array_splice($this->items, $itemposition, 1);
 		foreach ($this->items as $k => $v) {

@@ -58,7 +58,8 @@ class Listmapper {
 		$data['items'] = array(	
 			'id' => $itemid,
 			'position' => $item['position'],
-			'name' => $item['name']
+			'name' => $item['name'],
+			'checked' => '0'
 			);
 		$listobject->setValues($data);
 		return $listobject;
@@ -101,6 +102,19 @@ class Listmapper {
 		return $listobject;
 	}
 	
+	// Check item
+	public function check_item($listobject, $itemposition, $action) {
+		if ($action == 'check') {
+			$data['checked'] = 1;
+			$itemid = $listobject->checkItem($itemposition, 'check');
+		} else {
+			$data['checked'] = 0;
+			$itemid = $listobject->checkItem($itemposition, 'uncheck');
+		}
+		$this->db->update('listitems', $itemid, $data);
+		return $listobject;
+	}
+	
 	// Delete list (unset list class from session)
 	public function del_list($listobject) {
 		$listid = $listobject->getId();
@@ -117,7 +131,7 @@ class Listmapper {
 	public function get_saved_list($id) {
 		$listobject = new Checklist($this->db->select('lists', $id)[0]);
 		if ($listobject->getUserId() == $this->userid) {
-			$select = array('id', 'position', 'item');
+			$select = array('id', 'position', 'item', 'checked');
 			$data['items'] = $this->db->select('listitems', $id, 'listid', $select, 'position');
 
 			$listobject->setValues($data);

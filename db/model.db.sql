@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS `listitems` (
 	`listid`	INTEGER NOT NULL,
 	`userid`	INTEGER NOT NULL,
 	`position`	INTEGER NOT NULL,
-	`item`	TEXT NOT NULL
+	`item`	TEXT NOT NULL,
+	`checked`	INTEGER NOT NULL DEFAULT 0
 );
 COMMIT;

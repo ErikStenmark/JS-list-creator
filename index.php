@@ -30,7 +30,8 @@ include 'inc/head.php';
 						<?php
 							if(isset($_SESSION['list'])) {
 								foreach ($_SESSION['list']->getItems() as $item) {
-									echo '<li>'.$item['item'].'</li>';
+									if ($item['checked']) {$checked = 'checked';} else {$checked = '';}
+									echo '<li><input type="checkbox"'.$checked.'>'.$item['item'].'</li>';
 								}
 							}
 						?>

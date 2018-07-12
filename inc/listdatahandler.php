@@ -75,6 +75,17 @@ if (isset($_POST['movedown'])) {
 	$_SESSION['list'] = $listmapper->move_item($_SESSION['list'], $_POST['movedown'], 'down');
 }
 
+// Checking item
+if (isset($_POST['check'])) {
+	$_SESSION['list'] = $listmapper->check_item($_SESSION['list'], $_POST['check'], 'check');
+	echo $_POST['check'].' '.'checked';
+}
+
+if (isset($_POST['uncheck'])) {
+	$_SESSION['list'] = $listmapper->check_item($_SESSION['list'], $_POST['uncheck'], 'uncheck');
+	echo $_POST['check'].' '.'unchecked';
+}
+
 // Deleting list or item
 if (isset($_POST['dellist'])) {
 	$listmapper->del_list($_SESSION['list']);

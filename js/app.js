@@ -44,6 +44,14 @@ function ajax(action, arg){
 		
 	} else if (action == 'down') {
 		var vars = "movedown=" + arg;
+	
+	// Checking item
+	} else if (action == 'check') {
+		var vars = 'check=' + arg;
+	
+	// Unchecking item 
+	} else if (action == 'uncheck') {
+		var vars = 'uncheck=' + arg;
 	}
 	
 	hr.open("POST", url, true);
@@ -57,6 +65,8 @@ function ajax(action, arg){
 				var ul = document.getElementsByTagName('ul')[0];
 				var li = document.createElement('li');
 				li.textContent = return_data;
+				let text = '<input type="checkbox" class="checkbox">';
+				li.insertAdjacentHTML('afterbegin', text);
 				ul.appendChild(li);
 				attachListItemButtons(li);
 				if (li.previousElementSibling != null) {
@@ -66,6 +76,11 @@ function ajax(action, arg){
 			// Editing list name
 			} if (action == nameSpan) {
 				nameSpan.innerHTML = return_data;
+			}
+			if (action == 'check' || action == 'uncheck') {
+				var span = document.createElement('span');
+				span.textContent = return_data;
+				document.body.appendChild(span);
 			}
 		}
 	}
@@ -97,8 +112,6 @@ function updateListButtons() {
 
 // Adding move and del buttons to list items
 function attachListItemButtons(li) {
-	let text = '<input type="checkbox">';
-	li.insertAdjacentHTML('afterbegin', text);
 	let span = document.createElement('span');
 	span.className = 'listButtons';
 	li.appendChild(span);
@@ -223,8 +236,22 @@ addItemInput.addEventListener('keyup', (event) => {
 	}
 });
 
-// Click listener for list item buttons
+// Click listener for list item buttons and check boxes
 listUl.addEventListener('click', (event) => {	
+	
+	// Check boxes
+	if (event.target.type == 'checkbox') {
+		let li = event.target.parentNode;
+		let position = GetIndex(li);
+			if( event.target.checked) {
+				ajax('check', position);
+			} else {
+				ajax('uncheck', position);
+			}
+
+	}
+	
+	// Buttons
 	if (event.target.tagName == 'IMG') {
 		let li = event.target.parentNode.parentNode;
 		let position = GetIndex(li);
