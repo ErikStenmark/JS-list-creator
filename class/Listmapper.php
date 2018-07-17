@@ -18,8 +18,7 @@ class Listmapper {
 		// Create list with list name
 		if ($value['type'] == 'name') {
 			$data['name'] = $value['name'];						// Get list name
-			$listid = $this->db->insert('lists', $data);		// Add list to DB
-			$data['id'] = $listid;								// Get list id from DB
+			$data['id'] = $this->db->insert('lists', $data);	// Add list to DB
 			$listobject = new Checklist($data);					// Create list object
 		}
 		
@@ -27,14 +26,25 @@ class Listmapper {
 		if ($value['type'] == 'item') {
 			
 			// Create List
-			$listid = $this->db->insert('lists', $data);		// Add unnamed list to DB
-			$data['id'] = $listid;								// Get list id from DB
+			$data['id'] = $this->db->insert('lists', $data);	// Add unnamed list to DB
 			$listobject = new Checklist($data);					// Create list object
 			
 			// Add item
 			unset($data['datetime']);							// Datetime cannot be set to listitems table
 			unset($data['id']);									// Unsets list ID for adding item
 			$listobject = $this->add_item($listobject, $value);
+		}
+		
+		// Create list with both list name and item
+		if ($value['type'] == 'both'){
+			$data['name'] = $value['listname'];
+			$data['id'] = $this->db->insert('lists', $data);
+			$listobject = new Checklist($data);
+			$data['name'] = $value['itemname'];
+			$data['position'] = $value['position'];
+			unset($data['datetime']);
+			unset($data['id']);	
+			$listobject = $this->add_item($listobject, $data);
 		}
 		return $listobject;
 	}
@@ -55,10 +65,15 @@ class Listmapper {
 		$data['position'] = $item['position'];
 		$data['item'] = $item['name'];
 		$itemid = $this->db->insert('listitems', $data);
+		try {
+			$this->db->insert('dictionary', array('name' => $data['item'], 'userid' => $data['userid']), true);
+		} catch (PDOException $e) {
+			return $e;
+		}
 		$data['items'] = array(	
 			'id' => $itemid,
 			'position' => $item['position'],
-			'name' => $item['name'],
+			'item' => $item['name'],
 			'checked' => '0'
 			);
 		$listobject->setValues($data);

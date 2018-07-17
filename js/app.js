@@ -38,6 +38,10 @@ function ajax(action, arg){
 	} else if (action == 'ul') {
 		var vars = "item=" + JSON.stringify({name:arg, position:lis.length});
 	
+	// Adding name and item
+	} else if (action == 'both') {
+		var vars = "both=" + JSON.stringify({listname:arg[0], itemname:arg[1], position:lis.length});
+		
 	// Moving items
 	} else if (action == 'up') {
 		var vars = "moveup=" + arg;
@@ -62,31 +66,44 @@ function ajax(action, arg){
 			
 			// Adding li item
 			if (action == 'ul') {
-				var ul = document.getElementsByTagName('ul')[0];
-				var li = document.createElement('li');
-				li.textContent = return_data;
-				let text = '<input type="checkbox" class="checkbox">';
-				li.insertAdjacentHTML('afterbegin', text);
-				ul.appendChild(li);
-				attachListItemButtons(li);
-				if (li.previousElementSibling != null) {
-					evalListButtons(li.previousElementSibling);
-				}
+				addItem(return_data);
 				
 			// Editing list name
 			} if (action == nameSpan) {
-				nameSpan.innerHTML = return_data;
+				nameList(return_data);
 			}
-			if (action == 'check' || action == 'uncheck') {
-				var span = document.createElement('span');
-				span.textContent = return_data;
-				document.body.appendChild(span);
+			
+			// Crating list with both name and item
+			if (action == 'both') {
+				var obj = JSON.parse(return_data);
+				nameList(obj['listname']);
+				addItem(obj['itemname']);
 			}
 		}
 	}
     hr.send(vars);
 }
 
+function nameList(name) {
+	nameSpan.innerHTML = name;
+	toggleNameEdit(false);
+	addItemInput.focus();
+}
+
+function addItem(name) {
+	var ul = document.getElementsByTagName('ul')[0];
+	var li = document.createElement('li');
+	li.textContent = name;
+	let text = '<input type="checkbox" class="checkbox">';
+	li.insertAdjacentHTML('afterbegin', text);
+	ul.appendChild(li);
+	attachListItemButtons(li);
+	if (li.previousElementSibling != null) {
+		evalListButtons(li.previousElementSibling);
+	}
+}
+
+// Evaluates the need for up and down buttons (first and last list items)
 function evalListButtons(li) {
 	let buttons = li.querySelector('span.listButtons');
 	let up = buttons.querySelector('img.up');
@@ -138,7 +155,7 @@ function attachListItemButtons(li) {
 }
 
 // Get index of list item for position
-function GetIndex(sender) {   
+function getIndex(sender) {   
     var liElements = sender.parentNode.getElementsByTagName("li");
     var liElementsLength = liElements.length;
     var index;
@@ -157,6 +174,7 @@ function toggleNameEdit(bool) {
 		displayNameField.style.display = 'none';
 	} else {
 		editNameField.style.display = 'none';
+		nameInput.value = '';
 		displayNameField.style.display = 'block';
 	}
 }
@@ -164,9 +182,11 @@ function toggleNameEdit(bool) {
 // Name list button event listener
 nameButton.addEventListener('click', () => {
 	if(nameInput.value.replace(/\s/g, '').length) {
-		toggleNameEdit(false);
-		ajax(nameSpan, nameInput.value);
-		addItemInput.focus();
+		if(addItemInput.value.replace(/\s/g, '').length) {
+			ajax('both', [nameInput.value, addItemInput.value]);
+		} else {
+			ajax(nameSpan, nameInput.value);
+		}
 	}
 });
 
@@ -221,8 +241,12 @@ editNameField.addEventListener('keyup', (event) => {
 
 // Click listener for adding list item button
 addItemButton.addEventListener('click', () => {
-	if(addItemInput.value.replace(/\s/g, '').length) {
-		ajax('ul', addItemInput.value);
+	if (addItemInput.value.replace(/\s/g, '').length) {
+		if (nameInput.value.replace(/\s/g, '').length) {
+			ajax('both', [nameInput.value, addItemInput.value]);
+		} else {
+			ajax('ul', addItemInput.value);		
+		}
 		addItemInput.value = '';
 		addItemInput.focus();
 	}
@@ -242,19 +266,18 @@ listUl.addEventListener('click', (event) => {
 	// Check boxes
 	if (event.target.type == 'checkbox') {
 		let li = event.target.parentNode;
-		let position = GetIndex(li);
-			if( event.target.checked) {
-				ajax('check', position);
-			} else {
-				ajax('uncheck', position);
-			}
-
+		let position = getIndex(li);
+		if( event.target.checked) {
+			ajax('check', position);
+		} else {
+			ajax('uncheck', position);
+		}
 	}
 	
 	// Buttons
 	if (event.target.tagName == 'IMG') {
 		let li = event.target.parentNode.parentNode;
-		let position = GetIndex(li);
+		let position = getIndex(li);
 
 		if (event.target.className == 'remove') {
 			let ul = li.parentNode;
@@ -287,7 +310,7 @@ listUl.addEventListener('click', (event) => {
 // Mouse over listener for list items
 listUl.addEventListener('mouseover', (event) => {
 	if(event.target.tagName == 'LI') {
-		GetIndex(event.target);
+		getIndex(event.target);
 		event.target.className = 'highlight';
 		event.target.querySelector('span').style.display = 'inline';
 	}

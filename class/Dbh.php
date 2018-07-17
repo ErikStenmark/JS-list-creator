@@ -56,12 +56,16 @@ class Dbh {
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 	
-	public function insert($table, $data) {
+	public function insert($table, $data, $ignore = false) {
 		$keys = array_keys($data);
 		$values = array_values($data);
 		
 		try {
-			$sql = "INSERT INTO $table (".implode(',',$keys).") VALUES (:".implode(',:',$keys).")";
+			$sql = "INSERT "; 
+			if ($ignore == true) {
+				$sql .= "OR IGNORE ";
+			}
+			$sql .= "INTO $table (".implode(',',$keys).") VALUES (:".implode(',:',$keys).")";
 			$stmt = $this->connect()->prepare($sql);
 			for ($i = 0; $i < sizeof($keys); $i++) {
 				$stmt->bindParam(':'.$keys[$i], $values[$i]);
@@ -75,7 +79,7 @@ class Dbh {
 			die();
 		}
 		return $insertid;
-	}	
+	}
 	
 	public function del($table, $id, $field = 'id') {
 		try {

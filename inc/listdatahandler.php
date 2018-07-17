@@ -24,10 +24,16 @@ function sanitize($string) {
 }
 
 // Adding item recieves JSON with item name and list position.
-function decode_item($json) {
-	$data = json_decode($_POST['item'], TRUE);
-	$data['type'] = 'item';
-	$data['name'] = sanitize($data['name']);
+function decode_item($json, $listname = false) {
+		$data = json_decode($json, TRUE);
+	if ($listname == false) {
+		$data['type'] = 'item';
+		$data['name'] = sanitize($data['name']);
+	} else {
+		$data['type'] = 'both';
+		$data['listname'] = sanitize($data['listname']);
+		$data['itemname'] = sanitize($data['itemname']);
+	}
 	return $data;
 }
 
@@ -46,8 +52,17 @@ if ($mode == 'create') {
 		$data = decode_item($_POST['item']);
 	}
 	
+	if (isset($_POST['both'])) {
+		$data = decode_item($_POST['both'], true);
+	}
+	
 	$_SESSION['list'] = $listmapper->create_list($data, $datetime);
-	echo $data['name'];
+	
+	if (isset($_POST['both'])) {
+		echo json_encode(array('listname' => $data['listname'], 'itemname' => $data['itemname']));
+	} else {
+		echo $data['name'];
+	}
 }
 
 if ($mode == 'update') {

@@ -29,9 +29,12 @@ include 'inc/head.php';
 					<ul>
 						<?php
 							if(isset($_SESSION['list'])) {
-								foreach ($_SESSION['list']->getItems() as $item) {
-									if ($item['checked']) {$checked = 'checked';} else {$checked = '';}
-									echo '<li><input type="checkbox"'.$checked.'>'.$item['item'].'</li>';
+								$items = $_SESSION['list']->getItems();
+								if (!empty($items[0])) {
+									foreach ($items as $item) {
+										if ($item['checked']) {$checked = 'checked';} else {$checked = '';}
+										echo '<li><input type="checkbox"'.$checked.'>'.$item['item'].'</li>';
+									}
 								}
 							}
 						?>
