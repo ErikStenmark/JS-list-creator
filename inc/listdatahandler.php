@@ -93,12 +93,10 @@ if (isset($_POST['movedown'])) {
 // Checking item
 if (isset($_POST['check'])) {
 	$_SESSION['list'] = $listmapper->check_item($_SESSION['list'], $_POST['check'], 'check');
-	echo $_POST['check'].' '.'checked';
 }
 
 if (isset($_POST['uncheck'])) {
 	$_SESSION['list'] = $listmapper->check_item($_SESSION['list'], $_POST['uncheck'], 'uncheck');
-	echo $_POST['check'].' '.'unchecked';
 }
 
 // Deleting list or item

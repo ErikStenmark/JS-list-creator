@@ -16,12 +16,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 <body>
 	<div>
 		<h1>Welcome</h1>
-		<form action="index.php" method="post" autocomplete="off">		  
+		<form action="index.php" id="loginform" method="post" autocomplete="off">		  
 		<input type="hidden" name="client" value="web">
 			<div class="input">
 			<div class="field-wrap">
 				<label>
-				Email or username:
+				Email / username:
 				</label><br>
 				<input type="text" required autocomplete="off" name="logname"/>
 			</div>
@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			<input type="password" required autocomplete="off" name="password"/>
 		  </div>		  
 		  </div>
-		<button name="login">Log in</button>
+		<button type="submit" name="login">Log in</button>
 		</form>
 	</div>
 </body>

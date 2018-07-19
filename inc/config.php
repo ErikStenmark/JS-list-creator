@@ -2,7 +2,7 @@
 session_start();
 
 function __autoload($class) {
-	require_once(dirname(__DIR__)."\\class\\$class.php");
+	require_once(dirname(__DIR__)."/class/$class.php");
 }
 
 
