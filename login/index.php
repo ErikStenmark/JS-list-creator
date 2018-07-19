@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			<div class="input">
 			<div class="field-wrap">
 				<label>
-				Email / username:
+				Email or username:
 				</label><br>
 				<input type="text" required autocomplete="off" name="logname"/>
 			</div>
