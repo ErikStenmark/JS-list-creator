@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 - Receives data from JS AJAX and sends sanitized data to Listmapper Object.
 - Receives returns from object and updates $_SESSION

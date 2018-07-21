@@ -9,7 +9,7 @@ function __autoload($class) {
 date_default_timezone_set('Europe/Helsinki');
 $datetime = date('Y-m-d H:i:s');
 
-if ( $_SESSION['logged_in'] != 1 ) {
+if ( $_SESSION['logged_in_listapp'] != 1 ) {
 	header("location: login/index.php");
 } else {
 	include 'loginvars.php';
