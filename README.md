@@ -10,9 +10,9 @@ A simple list creating app written in PHP / vanilla JavaScript and using a SQLit
 ```php
 <?php
 // Enter correct Database Path:
-define('DB_PATH', $_SERVER['DOCUMENT_ROOT'] . '/PROJECT ROOT FOLDER/db/model.db');
+define('DB_PATH', $_SERVER['DOCUMENT_ROOT'] . '/db/model.db');
 ?>
 
-3. replace [PROJECT ROOT FOLDER] with actual project root folder name
+3. Fix the path to the db file depending on where $_SERVER['DOCUMENT_ROOT'] is pointing to
 
 4. Log in with u: Test123 p: Test123
