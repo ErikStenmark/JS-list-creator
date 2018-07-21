@@ -1,7 +1,7 @@
 <?php 
 include 'loginconfig.php';
 
-if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == true) {
+if (isset($_SESSION['logged_in_listapp']) && $_SESSION['logged_in_listapp'] == true) {
 	header ('location: ../index.php');
 }
 

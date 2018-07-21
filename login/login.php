@@ -8,7 +8,7 @@ if ($result[0] == true) {
 	$user = $result[1];	
 
 			//This is how we'll know the user is logged in
-			$_SESSION['logged_in'] = true;
+			$_SESSION['logged_in_listapp'] = true;
 
 			$_SESSION['email'] = $user['email'];
 			$_SESSION['username'] = $user['username'];
