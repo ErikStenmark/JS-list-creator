@@ -7,4 +7,3 @@
 	<meta name="author" content="SitePoint">
 	<link rel="stylesheet" href="css/style.css?v=1.0">
 </head>
-<body>

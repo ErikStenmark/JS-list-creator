@@ -116,12 +116,10 @@ h1 {
 	margin-bottom: 1.5em;
 }
 
-.listName img {
-	margin-right: .5em;
-}
-
-.editNameIcon {
-	margin-left: 1em;
+.editNameIcon, .delListIcon {
+	margin-left: .5em;
+  height: 1.5em;
+  display: none;
 }
 
 h1 + p {
@@ -170,51 +168,37 @@ button {
   width: 150px;
 }
 
-button + button {
-  margin-left: .5em;
-}
-
-p + button {
-  background: #52bab3;
-}
-
 .list {
 	margin-bottom: 1.5em;
 }
 
-.list button + button {
-  background: #768da3;
+.list li:hover, 
+.nameDisplay:hover {
+  background-color: lightblue;
 }
 
-.list li button + button {
-  background: #508abc;
+.list li:hover .listButtons, 
+.list li:hover .delListIcon {
+  display: inline;
+  height: 1em;
 }
 
-li button:first-child {
-  margin-left: auto;
-  background: #52bab3;
+.nameDisplay:hover .editNameIcon, 
+.nameDisplay:hover .delListIcon {
+  display: inline;
 }
 
-.list li button:last-child {
-  background: #768da3;
-}
-
-li button {
-  font-size: .75em;
-  padding: .5em .65em;
-}
-
-.list ul li span {
+.list li span {
 	display: none;
 	margin-left: auto;
 }
 
-.list ul li span img{
+.list li span img{
 	margin-right: 1em;
 }
 
-.highlight {
-	background-color: lightblue;
+.listButtons img {
+  cursor:pointer;
 }
 
 /*********

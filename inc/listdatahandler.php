@@ -101,8 +101,14 @@ if (isset($_POST['uncheck'])) {
 
 // Deleting list or item
 if (isset($_POST['dellist'])) {
-	$listmapper->del_list($_SESSION['list']);
-	unset($_SESSION['list']);
+  if($_POST['dellist'] == 'session') {
+    $listmapper->del_list($_SESSION['list']);
+    unset($_SESSION['list']);
+    unset($_SESSION['test']);
+  }
+  else if(is_integer((int)$_POST['dellist'])) {
+    $listmapper->del_list($listmapper->get_saved_list($_POST['dellist']));
+  }
 }
 
 if (isset($_POST['delitem'])) {

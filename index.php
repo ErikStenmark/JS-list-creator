@@ -8,25 +8,26 @@ if (isset($_GET['listid'])) {
 }
 include 'inc/head.php';
 ?>
+<body id="list">
   <div class="wrapper">
     <?php include 'inc/navbar.php'; ?>  
     <content>
       <div class="container">
         <h1>List Builder</h1>
         <p>Build your list</p>  
-        <span class="nameEditField" style="display: block">
-          <input type="text" class="listName" placeholder="Name your list">
-          <button class="listNameButton">Change list name</button>
+        <span class="nameEdit" style="display: block">
+          <input type="text" id="listName" placeholder="Name your list">
+          <button id="listNameButton">Change list name</button>
         </span> 
         <span class="nameDisplay" style="display: none; width: auto"><?
           ?><span class="listName" style="font-size: 1.5em"><?php 
             if(isset($_SESSION['list'])) { echo $_SESSION['list']->getName(); }
             ?></span><?
-          ?><a href="#"><img class ="editNameIcon" src="img/edit.png" style="height: 1.5em; display: none;"></a><?
-          ?><a href="#"><img class ="delListIcon" src="img/del.png" style="height: 1.5em; display: none;"></a><?
+          ?><a href="#"><img class="editNameIcon" src="img/edit.png"></a><?
+          ?><a href="#"><img class="delListIcon" src="img/del.png"></a><?
         ?></span>     
-        <div class="list">
-          <ul>
+        <div>
+          <ul class="list">
             <?php
               if(isset($_SESSION['list'])) {
                 $items = $_SESSION['list']->getItems();
@@ -46,6 +47,7 @@ include 'inc/head.php';
     </content>  
     <?php include 'inc/footer.php'; ?>  
   </div> <!-- End of Wrapper -->
-  <script src="js/app.js"></script>
+  <script src="js/func.js"></script>
+  <script src="js/list.js"></script>
 </body>
 </html>

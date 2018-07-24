@@ -23,13 +23,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 				<label>
 				Email / username:
 				</label><br>
-				<input type="text" required autocomplete="off" name="logname"/>
+				<input type="text" required autocomplete="on" name="logname"/>
 			</div>
 			<div class="field-wrap">
 				<label>
 				  Password:
 				</label><br>
-			<input type="password" required autocomplete="off" name="password"/>
+			<input type="password" required autocomplete="current-password" name="password"/>
 		  </div>		  
 		  </div>
 		<button type="submit" name="login">Log in</button>
