@@ -143,13 +143,43 @@ li {
   align-items: center;
 }
 
-input[type]:not([type=checkbox]), button {
+input[type]:not([type=checkbox]), button, #suggestionList {
   font-size: .85em;
   padding: .65em 1em;
   border-radius: .3em;
   outline: 0;
   width: 200px;
 }
+
+#suggestionList {
+  border: 1px solid lightgray;
+  display: none;
+}
+
+#suggestionList a {
+  cursor: pointer;
+}
+
+#suggestionList li {
+  overflow: hidden;
+  margin: 0;
+  justify-content: space-between;
+  display: flex;
+  cursor: default;
+}
+
+#suggestionList li a {
+  float: right;
+}
+
+#suggestionList li:hover {
+  background: lightblue;
+} 
+
+.selected {
+  background: lightblue;
+}
+
 input[type=checkbox] {
 	transform:scale(1.2, 1.2);
 }

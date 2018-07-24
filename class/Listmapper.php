@@ -153,6 +153,21 @@ class Listmapper {
 			return $listobject;
 		}
 	}
+  
+  public function suggest_items($string) {
+    $var = $string.'%';
+    $sql = "SELECT * from dictionary WHERE userid = ? AND name LIKE ?";
+    $stmt = $this->db->connect()->prepare($sql);
+    $stmt->bindValue(1, $this->userid);
+    $stmt->bindValue(2, $var);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $result;
+  }
+  
+  public function del_suggestion($id) {
+    $this->db->del("dictionary", $id);
+  }
 }
 
 ?>

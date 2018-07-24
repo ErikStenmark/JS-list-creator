@@ -39,30 +39,32 @@ function decode_item($json, $listname = false) {
 
 // Create list
 if ($mode == 'create') {
-	// With list name
-	if (isset($_POST['name'])) {
-		$input = sanitize($_POST['name']);
-		$data = array (
-			'type' => 'name',
-			'name' => $input
-		);
-	}
-	// With list item
-	if (isset($_POST['item'])) {
-		$data = decode_item($_POST['item']);
-	}
-	
-	if (isset($_POST['both'])) {
-		$data = decode_item($_POST['both'], true);
-	}
-	
-	$_SESSION['list'] = $listmapper->create_list($data, $datetime);
-	
-	if (isset($_POST['both'])) {
-		echo json_encode(array('listname' => $data['listname'], 'itemname' => $data['itemname']));
-	} else {
-		echo $data['name'];
-	}
+  if(isset($_POST['name']) || isset($_POST['item']) || isset($_POST['both'])) { 
+    // With list name
+    if (isset($_POST['name'])) {
+      $input = sanitize($_POST['name']);
+      $data = array (
+        'type' => 'name',
+        'name' => $input
+      );
+    }
+    // With list item
+    if (isset($_POST['item'])) {
+      $data = decode_item($_POST['item']);
+    }
+    
+    if (isset($_POST['both'])) {
+      $data = decode_item($_POST['both'], true);
+    }
+    
+    $_SESSION['list'] = $listmapper->create_list($data, $datetime);
+    
+    if (isset($_POST['both'])) {
+      echo json_encode(array('listname' => $data['listname'], 'itemname' => $data['itemname']));
+    } else {
+      echo $data['name'];
+    }
+  }
 }
 
 if ($mode == 'update') {
@@ -113,6 +115,15 @@ if (isset($_POST['dellist'])) {
 
 if (isset($_POST['delitem'])) {
 	$_SESSION['list'] = $listmapper->remove_item($_SESSION['list'], $_POST['delitem']);
+}
+
+if (isset($_POST['suggest'])) {
+  $array = $listmapper->suggest_items($_POST['suggest']);
+  echo json_encode($array);
+}
+
+if (isset($_POST['delsuggestion'])) {
+  $listmapper->del_suggestion($_POST['delsuggestion']);
 }
 
 ?>

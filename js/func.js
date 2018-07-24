@@ -38,7 +38,15 @@ function ajax(action, arg){
 	// Unchecking item 
 	} else if (action == 'uncheck') {
 		var vars = 'uncheck=' + arg;
-	}
+	
+  // Get item suggestion
+  } else if (action == 'suggest') {
+    var vars = 'suggest=' + arg;
+  
+  // Del item suggestion
+  } else if (action == 'delsuggestion') {
+    var vars = 'delsuggestion=' + arg;
+  }
 	
 	hr.open("POST", url, true);
 	hr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -60,6 +68,22 @@ function ajax(action, arg){
         var obj = JSON.parse(return_data);
         nameList(obj['listname']);
         addItem(obj['itemname']);
+      }
+      
+      if (action == 'suggest') {
+        var obj = JSON.parse(return_data);
+        if(obj.length > 0) {
+          suggestionList.style.display = 'block';
+        } else {
+          suggestionList.style.display = 'none';
+        }
+        var options ='<ul>';
+        for (let i = 0; i < obj.length; i++) {
+          // options += '<option value="' +obj[i].name+ '"><a href="#" class="delsuggestion" id="'+obj[i].id+'">del</a></option>';
+          options += '<li id="'+obj[i].id+'" name="'+obj[i].name+'">' +obj[i].name+ '<a class="delsuggestion" id="'+obj[i].id+'">del</a></li>';
+        }
+        options += '</ul>';
+        suggestionList.innerHTML = options;
       }
     }
 	}

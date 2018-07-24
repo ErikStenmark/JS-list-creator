@@ -1,14 +1,18 @@
+const body = document.querySelector('body');
+
 const editNameField = document.querySelector('span.nameEdit');
 const editNameInput = editNameField.querySelector('#listName');
 const editNameButton = editNameField.querySelector('#listNameButton');
-const nameSpan = document.querySelector('span.listName');
 const displayNameField = document.querySelector('span.nameDisplay');
+const nameSpan = document.querySelector('span.listName');
 const editNameIcon = document.querySelector('img.editNameIcon');
 const delListIcon = document.querySelector('img.delListIcon');
 const addItemInput = document.querySelector('input.addItemInput');
+const suggestionList = document.getElementById('suggestionList');
 const addItemButton = document.querySelector('button.addItemButton');
 const listUl = document.querySelector('ul.list');
 const lis = listUl.children;
+
 
 // Hide name editing on already named list
 if(displayNameField != null) {
@@ -72,18 +76,12 @@ addItemButton.addEventListener('click', () => {
     if (editNameInput.value.replace(/\s/g, '').length) {
       ajax('both', [editNameInput.value, addItemInput.value]);
     } else {
-      ajax('ul', addItemInput.value);		
+      ajax('ul', addItemInput.value);
     }
+    suggestionList.innerHTML = '';
+    suggestionList.style.display = 'none';
     addItemInput.value = '';
     addItemInput.focus();
-  }
-});
-
-// Keyboard enter listener for adding list item
-addItemInput.addEventListener('keyup', (event) => {
-  event.preventDefault();
-  if (event.keyCode === 13) {
-    addItemButton.click();
   }
 });
 
@@ -134,3 +132,111 @@ listUl.addEventListener('click', (event) => {
   }
 });
 
+// Shows suggestions for item input when item input has some value
+function getSuggestions() {
+  if (addItemInput.value == '') {
+    suggestionList.innerHTML = '';
+    hideSuggestions();
+  } else {
+    ajax('suggest', addItemInput.value);
+  }
+}
+
+// Hides suggestions
+function hideSuggestions() {
+  suggestionList.style.display = 'none';
+}
+
+// When "unfocusing" from item input or suggestion list
+body.addEventListener('click', (e) => {
+  if (e.target != addItemInput || e.target != suggestionList) {
+    hideSuggestions();
+  }
+});
+
+// clicking suggestion or DEL link of suggestion
+suggestionList.addEventListener('click', (e) => {
+  // Suggestion
+  if (e.target.tagName == 'LI') {
+    addItemInput.value = e.target.getAttribute('name');
+  }
+  // DEL link
+  if (e.target.tagName == 'A') {
+    let id = e.target.id;
+    ajax('delsuggestion', id);
+    getSuggestions();
+  }
+  addItemInput.focus();
+});
+
+// Keyboard keys for choosing suggestion
+addItemInput.addEventListener('keydown', (e) => {
+  let suggestions = suggestionList.getElementsByTagName('li').length;
+  let selection = suggestionList.getElementsByClassName('selected');
+  
+  if (suggestions > 0) {
+    
+    let ul = suggestionList.querySelector('ul');
+    let lis = ul.children;
+    
+    // Down arrow key
+    if (e.keyCode == 40) {
+      if (suggestionList.style.display = 'none') {
+        suggestionList.style.display = 'block';
+      }
+      e.preventDefault();
+      if(selection.length == 0) {
+        ul.firstChild.className = 'selected';
+      } else {
+        if (selection[0] != ul.lastChild) {
+          let nextselection = selection[0].nextElementSibling;
+          selection[0].className = '';
+          nextselection.className = 'selected';
+        }
+      }
+    }
+    
+    // Up arraow key
+    if (e.keyCode == 38) {
+      e.preventDefault();
+      if(selection.length == 0) {
+        ul.lastChild.className = 'selected';
+      } else {
+        if (selection[0] != ul.firstChild) {
+          let prevselection = selection[0].previousElementSibling;
+          selection[0].className = '';
+          prevselection.className = 'selected';
+        }
+      }
+    }
+    
+    // Enter when suggestions available
+    if (e.keyCode == 13) {
+      if(selection.length != 0) { // if item selected adds value to input
+        e.preventDefault();
+        addItemInput.value = selection[0].getAttribute('name');
+        suggestionList.innerHTML = '';
+        suggestionList.style.display = 'none';
+      } else { // "default" behavior, clicks add to list.
+        e.preventDefault();
+        addItemButton.click();
+      }
+    }
+    
+    // DEL key
+    if (e.keyCode == 46) {
+      if(selection.length != 0) {
+        e.preventDefault();
+        selection[0].querySelector('a').click();
+      }
+    }
+  }
+  
+  // Enter when no suggestions available
+  else if (e.keyCode == 13) {
+    if(selection.length == 0) {
+      e.preventDefault();
+      addItemButton.click();
+    }
+  }
+});

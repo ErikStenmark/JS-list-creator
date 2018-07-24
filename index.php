@@ -41,8 +41,11 @@ include 'inc/head.php';
             ?>
           </ul>
         </div>
-        <input type="text" class="addItemInput" placeholder="Add item to list">
-        <button class="addItemButton">Add item</button>
+          <div>
+          <input type="text" class="addItemInput" oninput="getSuggestions()" onfocus="getSuggestions()" placeholder="Add item to list">
+          <button class="addItemButton">Add item</button>
+          </div>
+        <div id="suggestionList"></div>
       </div>        
     </content>  
     <?php include 'inc/footer.php'; ?>  
