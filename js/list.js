@@ -57,7 +57,11 @@ editNameButton.addEventListener('click', () => {
     if(addItemInput.value.replace(/\s/g, '').length) {
       ajax('both', [editNameInput.value, addItemInput.value]);
     } else {
-      ajax('editname', editNameInput.value);
+      if (listType == 'grocery') {
+        ajax('namenewgrocery', editNameInput.value);
+      } else {
+        ajax('editname', editNameInput.value);
+      }
     }
   }
   toggleTypeEdit(false);
@@ -104,7 +108,7 @@ addItemButton.addEventListener('click', () => {
           toggleNameEdit(false);
         }
       if (listType == 'grocery') {
-        ajax('addGroceryItem', addItemInput.value);
+        ajax('addgroceryitem', addItemInput.value);
       } else {
         ajax('ul', addItemInput.value);
       }

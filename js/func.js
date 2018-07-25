@@ -5,54 +5,39 @@ function ajax(action, arg){
     var url = "inc/listdatahandler.php";
 	
 	// Naming list
-	if (action == 'editname') {
-		var vars = "name=" + arg;
+	if (action == 'editname') { var vars = "name=" + arg;
 	
-	// Deleting list
-	} else if (action == 'dellist') {
-		var vars = "dellist=" + arg;
-	
-	// Deleting item
-	} else if (action == 'delitem') {
-		var vars = "delitem=" + arg;
+	// Deleting list /item
+	} else if (action == 'dellist') { var vars = "dellist=" + arg;
+	} else if (action == 'delitem') { var vars = "delitem=" + arg;
 		
 	// Adding item to list
 	} else if (action == 'ul') {
 		var vars = "item=" + JSON.stringify({name:arg, position:lis.length});
 	
+  // Renaming grocery list with no items
+  } else if (action == 'namenewgrocery') { var vars ="namenewgrocery=" + arg;
+    
   // Adding item with listType grocery (creates list if needed)
-  } else if(action == 'addGroceryItem') {
-    var vars = "groceryItem=" + JSON.stringify({name:arg, position:lis.length});
+  } else if (action == 'addgroceryitem') {
+    var vars = "groceryitem=" + JSON.stringify({name:arg, position:lis.length});
     
 	// Adding name and item
 	} else if (action == 'both') {
-		var vars = "both=" + JSON.stringify({listname:arg[0], 
-                                         itemname:arg[1], 
-                                         position:lis.length});
+		var vars = "both=" + 
+      JSON.stringify({listname:arg[0], itemname:arg[1], position:lis.length});
 		
 	// Moving items
-	} else if (action == 'up') {
-		var vars = "moveup=" + arg;
-		
-	} else if (action == 'down') {
-		var vars = "movedown=" + arg;
+	} else if (action == 'up') { var vars = "moveup=" + arg;		
+	} else if (action == 'down') { var vars = "movedown=" + arg;
 	
-	// Checking item
-	} else if (action == 'check') {
-		var vars = 'check=' + arg;
+	// Checking / unchecking item
+	} else if (action == 'check') { var vars = 'check=' + arg;
+	} else if (action == 'uncheck') { var vars = 'uncheck=' + arg;
 	
-	// Unchecking item 
-	} else if (action == 'uncheck') {
-		var vars = 'uncheck=' + arg;
-	
-  // Get item suggestion
-  } else if (action == 'suggest') {
-    var vars = 'suggest=' + arg;
-  
-  // Del item suggestion
-  } else if (action == 'delsuggestion') {
-    var vars = 'delsuggestion=' + arg;
-  }
+  // Get/Del item suggestion
+  } else if (action == 'suggest') { var vars = 'suggest=' + arg;
+  } else if (action == 'delsuggestion') { var vars = 'delsuggestion=' + arg; }
 	
 	hr.open("POST", url, true);
 	hr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -61,11 +46,10 @@ function ajax(action, arg){
       var return_data = hr.responseText;
     
       // Adding li item
-      if (action == 'ul') {
-        addItem(return_data);
+      if (action == 'ul') { addItem(return_data);
         
       // Editing list name
-      } if (action == 'editname') {
+      } if (action == 'editname' || action == 'namenewgrocery') {
         nameList(return_data);
       }
       
@@ -77,9 +61,7 @@ function ajax(action, arg){
       }
       
       // Creating grocery list or adding item
-      if (action == 'addGroceryItem') {
-        addItem(return_data);
-      }
+      if (action == 'addgroceryitem') { addItem(return_data); }
       
       // Creates ul in suggestion list and adds suggestions as li
       if (action == 'suggest') {
@@ -102,12 +84,14 @@ function ajax(action, arg){
     hr.send(vars);
 }
 
+// Front-end for naming list (no ajax)
 function nameList(name) {
   nameSpan.innerHTML = name;
   toggleNameEdit(false);
   addItemInput.focus();
 }
 
+// Front-end for adding list item to list (ajax call not handeled here)
 function addItem(name) {
   var ul = document.getElementsByTagName('ul')[0];
   var li = document.createElement('li');
@@ -139,6 +123,7 @@ function evalListButtons(li) {
   }
 }
 
+// Loops trough all list items to see which buttons are needed
 function updateListButtons() {
   for (let i = 0; i < lis.length; i++) {
     evalListButtons(lis[i]);
@@ -203,6 +188,7 @@ function toggleNameEdit(bool) {
   }
 }
 
+// Hide / show list type buttons
 function toggleTypeEdit(bool) {
   if (bool == true) {
     listTypeDiv.style.display = 'block';

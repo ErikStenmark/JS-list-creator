@@ -24,6 +24,7 @@ function sanitize($string) {
 }
 
 // Adding item recieves JSON with item name and list position.
+// $listname = true when adding item and naming list simultaniously
 function decode_item($json, $listname = false) {
 		$data = json_decode($json, TRUE);
 	if ($listname == false) {
@@ -42,7 +43,8 @@ if ($mode == 'create') {
   if(isset($_POST['name']) || 
      isset($_POST['item']) || 
      isset($_POST['both']) ||
-     isset($_POST['groceryItem'])) { 
+     isset($_POST['groceryitem']) ||
+     isset($_POST['namenewgrocery'])) { 
     
     // With list name
     if (isset($_POST['name'])) {
@@ -53,19 +55,30 @@ if ($mode == 'create') {
         'type' => 'todo'
       );
     }
+    
     // With list item
     if (isset($_POST['item'])) {
       $data = decode_item($_POST['item']);
     }
     
     // With item when listType == 'grocery'
-    if (isset($_POST['groceryItem'])) {
-      $data = decode_item($_POST['groceryItem']);
+    if (isset($_POST['groceryitem'])) {
+      $data = decode_item($_POST['groceryitem']);
       $data['method'] = 'item';
       $data['listType'] = 'grocery';
-
     }
     
+    // Grocery list by renaming list
+    if (isset($_POST['namenewgrocery'])) {
+      $input = sanitize($_POST['namenewgrocery']);
+      $data = array (
+        'method' => 'name',
+        'name' => $input,
+        'type' => 'grocery'
+      );
+    }
+    
+    // Todo list with both name and item
     if (isset($_POST['both'])) {
       $data = decode_item($_POST['both'], true);
     }
@@ -80,6 +93,7 @@ if ($mode == 'create') {
   }
 }
 
+// Update list
 if ($mode == 'update') {
 	// Adding item to list
 	if (isset($_POST['item'])) {
@@ -88,19 +102,26 @@ if ($mode == 'update') {
 		echo $data['name'];
 	}
   
-	// Adding item to grocery list
-	if (isset($_POST['groceryItem'])) {
-		$data = decode_item($_POST['groceryItem']);
-		$listmapper->add_item($_SESSION['list'], $data);
-		echo $data['name'];
-	}
-	
 	// Editing list name
 	if (isset($_POST['name'])) {
-		$input = $_POST['name'];
+		$input = sanitize($_POST['name']);
 		$_SESSION['list'] = $listmapper->edit_list_name($_SESSION['list'], $input);
 		echo $input;
 	}	
+  
+	// Adding item to grocery list
+	if (isset($_POST['groceryitem'])) {
+		$data = decode_item($_POST['groceryitem']);
+		$listmapper->add_item($_SESSION['list'], $data);
+		echo $data['name'];
+	}
+  
+  // Renaming existing grocery list
+  if(isset($_POST['namenewgrocery'])) {
+    $input = sanitize($_POST['namenewgrocery']);
+		$_SESSION['list'] = $listmapper->edit_list_name($_SESSION['list'], $input);
+    echo $input;
+  }
 }
 
 // Moving item around
@@ -145,5 +166,4 @@ if (isset($_POST['suggest'])) {
 if (isset($_POST['delsuggestion'])) {
   $listmapper->del_suggestion($_POST['delsuggestion']);
 }
-
 ?>
