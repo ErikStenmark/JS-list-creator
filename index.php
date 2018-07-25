@@ -39,7 +39,7 @@ include 'inc/head.php';
         ?></span>     
         
         <!-- List div -->
-        <div class="list" <? if (isset($_SESSION['list'])) { echo 'id="'.$_SESSION['list']->getListType().'"'; } ?>>
+        <div class="list" <?php if (isset($_SESSION['list'])) { echo 'id="'.$_SESSION['list']->getListType().'"'; } ?>>
           <ul class="list">
             <?php
               if(isset($_SESSION['list'])) {
