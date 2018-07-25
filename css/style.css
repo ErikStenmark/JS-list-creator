@@ -18,6 +18,10 @@ body {
    position:relative;
 }
 
+button:hover {
+  box-shadow: 2px 2px 10px gray;
+}
+
 /*********
 * Navbar *
 *********/
@@ -110,6 +114,23 @@ body {
 
 h1 {
   margin-bottom: 0;
+}
+
+.listTypeSelect {
+  margin-bottom: 2em;
+  display: block;
+}
+
+.listTypeSelect p {
+  margin-bottom: 1em;
+}
+
+.listTypeSelect button {
+  background-color: #4928ef;
+}
+
+.listTypeSelect button + button {
+  background-color: #25ceac;
 }
 
 .nameDisplay, .listName {

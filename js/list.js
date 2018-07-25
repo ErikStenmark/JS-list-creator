@@ -1,5 +1,6 @@
 const body = document.querySelector('body');
 
+const listTypeDiv = document.querySelector('div.listTypeSelect');
 const editNameField = document.querySelector('span.nameEdit');
 const editNameInput = editNameField.querySelector('#listName');
 const editNameButton = editNameField.querySelector('#listNameButton');
@@ -10,18 +11,45 @@ const delListIcon = document.querySelector('img.delListIcon');
 const addItemInput = document.querySelector('input.addItemInput');
 const suggestionList = document.getElementById('suggestionList');
 const addItemButton = document.querySelector('button.addItemButton');
+const listDiv = document.querySelector('div.list');
 const listUl = document.querySelector('ul.list');
 const lis = listUl.children;
 
+// Get type of list on loading saved list
+// listDiv gets id from PHP object
+let listType;
+if (listDiv.id != '') {
+  listType = listDiv.id;
+  if (listType == 'grocery') {
+    addSuggestAttributes();
+  }
+}
+
+// Adding list item buttons for existing list items
+for (let i = 0; i < lis.length; i++) {
+  attachListItemButtons(lis[i]);
+}
 
 // Hide name editing on already named list
 if (nameSpan.textContent != '') {
   toggleNameEdit(false);
+  toggleTypeEdit(false);
   addItemInput.focus();
 } else {
   editNameInput.focus(); 
 }
 
+// New list type selection listener
+listTypeDiv.addEventListener('click', (e) => {
+  if (e.target.id == 'grocery') {
+    listType = 'grocery';
+    addSuggestAttributes();
+    nameList('Grocery list');
+  } else {
+    listType = 'todo';
+  }
+  toggleTypeEdit(false);
+});
 
 // Name list button event listener
 editNameButton.addEventListener('click', () => {
@@ -32,12 +60,8 @@ editNameButton.addEventListener('click', () => {
       ajax('editname', editNameInput.value);
     }
   }
+  toggleTypeEdit(false);
 });
-
-// Adding list item buttons for existing list items
-for (let i = 0; i < lis.length; i++) {
-  attachListItemButtons(lis[i]);
-}
 
 // Click listener for list name buttons
 displayNameField.addEventListener('click', (event) => {
@@ -79,13 +103,18 @@ addItemButton.addEventListener('click', () => {
           nameSpan.textContent = 'unnamed';
           toggleNameEdit(false);
         }
-      ajax('ul', addItemInput.value);
+      if (listType == 'grocery') {
+        ajax('addGroceryItem', addItemInput.value);
+      } else {
+        ajax('ul', addItemInput.value);
+      }
     }
     suggestionList.innerHTML = '';
     suggestionList.style.display = 'none';
     addItemInput.value = '';
     addItemInput.focus();
   }
+  toggleTypeEdit(false);
 });
 
 // Click listener for list item buttons and check boxes
@@ -134,21 +163,6 @@ listUl.addEventListener('click', (event) => {
     updateListButtons();
   }
 });
-
-// Shows suggestions for item input when item input has some value
-function getSuggestions() {
-  if (addItemInput.value == '') {
-    suggestionList.innerHTML = '';
-    hideSuggestions();
-  } else {
-    ajax('suggest', addItemInput.value);
-  }
-}
-
-// Hides suggestions
-function hideSuggestions() {
-  suggestionList.style.display = 'none';
-}
 
 // When "unfocusing" from item input or suggestion list
 body.addEventListener('click', (e) => {
@@ -243,3 +257,28 @@ addItemInput.addEventListener('keydown', (e) => {
     }
   }
 });
+
+// Shows suggestions for item input when item input has some value
+function getSuggestions() {
+  if (addItemInput.value == '') {
+    suggestionList.innerHTML = '';
+    hideSuggestions();
+  } else {
+    ajax('suggest', addItemInput.value);
+  }
+}
+
+// Hides suggestions
+function hideSuggestions() {
+  suggestionList.style.display = 'none';
+}
+
+// Adds suggest functionality to item input (only used with grocery mode)
+function addSuggestAttributes() {
+    var att1 = document.createAttribute("oninput");
+    var att2 = document.createAttribute("onfocus");
+    att1.value = "getSuggestions()"; 
+    att2.value = "getSuggestions()"; 
+    addItemInput.setAttributeNode(att1);
+    addItemInput.setAttributeNode(att2);
+}

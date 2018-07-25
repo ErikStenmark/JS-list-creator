@@ -27,10 +27,10 @@ function sanitize($string) {
 function decode_item($json, $listname = false) {
 		$data = json_decode($json, TRUE);
 	if ($listname == false) {
-		$data['type'] = 'item';
+		$data['method'] = 'item';
 		$data['name'] = sanitize($data['name']);
 	} else {
-		$data['type'] = 'both';
+		$data['method'] = 'both';
 		$data['listname'] = sanitize($data['listname']);
 		$data['itemname'] = sanitize($data['itemname']);
 	}
@@ -39,18 +39,31 @@ function decode_item($json, $listname = false) {
 
 // Create list
 if ($mode == 'create') {
-  if(isset($_POST['name']) || isset($_POST['item']) || isset($_POST['both'])) { 
+  if(isset($_POST['name']) || 
+     isset($_POST['item']) || 
+     isset($_POST['both']) ||
+     isset($_POST['groceryItem'])) { 
+    
     // With list name
     if (isset($_POST['name'])) {
       $input = sanitize($_POST['name']);
       $data = array (
-        'type' => 'name',
-        'name' => $input
+        'method' => 'name',
+        'name' => $input,
+        'type' => 'todo'
       );
     }
     // With list item
     if (isset($_POST['item'])) {
       $data = decode_item($_POST['item']);
+    }
+    
+    // With item when listType == 'grocery'
+    if (isset($_POST['groceryItem'])) {
+      $data = decode_item($_POST['groceryItem']);
+      $data['method'] = 'item';
+      $data['listType'] = 'grocery';
+
     }
     
     if (isset($_POST['both'])) {
@@ -71,6 +84,13 @@ if ($mode == 'update') {
 	// Adding item to list
 	if (isset($_POST['item'])) {
 		$data = decode_item($_POST['item']);
+		$listmapper->add_item($_SESSION['list'], $data);
+		echo $data['name'];
+	}
+  
+	// Adding item to grocery list
+	if (isset($_POST['groceryItem'])) {
+		$data = decode_item($_POST['groceryItem']);
 		$listmapper->add_item($_SESSION['list'], $data);
 		echo $data['name'];
 	}

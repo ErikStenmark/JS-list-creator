@@ -1,7 +1,7 @@
 <?php
 
 class Checklist {
-	private $id = null, $userid, $name, $datetime, $inDB = false;
+	private $id = null, $userid, $name, $type, $datetime, $inDB = false;
 	private $items = [];
 	
 	public function __construct ($data = []) {
@@ -20,6 +20,9 @@ class Checklist {
 		}
 		if (isset($data['name'])) {
 			$this->name = $data['name'];
+		}
+		if (isset($data['type'])) {
+			$this->type = $data['type'];
 		}
 		if (isset($data['datetime'])) {
 			$this->datetime = $data['datetime'];
@@ -43,6 +46,10 @@ class Checklist {
 	
 	public function getName() {
 		return $this->name;
+	}	
+  
+	public function getListType() {
+		return $this->type;
 	}
 	
 	public function getItems() {

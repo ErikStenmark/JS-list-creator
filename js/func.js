@@ -20,9 +20,15 @@ function ajax(action, arg){
 	} else if (action == 'ul') {
 		var vars = "item=" + JSON.stringify({name:arg, position:lis.length});
 	
+  // Adding item with listType grocery (creates list if needed)
+  } else if(action == 'addGroceryItem') {
+    var vars = "groceryItem=" + JSON.stringify({name:arg, position:lis.length});
+    
 	// Adding name and item
 	} else if (action == 'both') {
-		var vars = "both=" + JSON.stringify({listname:arg[0], itemname:arg[1], position:lis.length});
+		var vars = "both=" + JSON.stringify({listname:arg[0], 
+                                         itemname:arg[1], 
+                                         position:lis.length});
 		
 	// Moving items
 	} else if (action == 'up') {
@@ -70,6 +76,12 @@ function ajax(action, arg){
         addItem(obj['itemname']);
       }
       
+      // Creating grocery list or adding item
+      if (action == 'addGroceryItem') {
+        addItem(return_data);
+      }
+      
+      // Creates ul in suggestion list and adds suggestions as li
       if (action == 'suggest') {
         var obj = JSON.parse(return_data);
         if(obj.length > 0) {
@@ -79,8 +91,8 @@ function ajax(action, arg){
         }
         var options ='<ul>';
         for (let i = 0; i < obj.length; i++) {
-          // options += '<option value="' +obj[i].name+ '"><a href="#" class="delsuggestion" id="'+obj[i].id+'">del</a></option>';
-          options += '<li id="'+obj[i].id+'" name="'+obj[i].name+'">' +obj[i].name+ '<a class="delsuggestion" id="'+obj[i].id+'">del</a></li>';
+          options += '<li id="'+obj[i].id+'" name="'+obj[i].name+'">' +obj[i].name+ 
+                     '<a class="delsuggestion" id="'+obj[i].id+'">del</a></li>';
         }
         options += '</ul>';
         suggestionList.innerHTML = options;
@@ -188,5 +200,13 @@ function toggleNameEdit(bool) {
     editNameField.style.display = 'none';
     editNameInput.value = '';
     displayNameField.style.display = 'block';
+  }
+}
+
+function toggleTypeEdit(bool) {
+  if (bool == true) {
+    listTypeDiv.style.display = 'block';
+  } else {
+    listTypeDiv.style.display = 'none';
   }
 }

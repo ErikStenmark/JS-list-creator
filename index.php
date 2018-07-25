@@ -13,12 +13,23 @@ include 'inc/head.php';
     <?php include 'inc/navbar.php'; ?>  
     <content>
       <div class="container">
+      
         <h1>List Builder</h1>
-        <p>Build your list</p>  
+        <p>Build your list</p> 
+
+        <div class="listTypeSelect">
+          <p>List type:</p>
+          <button id="grocery">Grocery</button>
+          <button id="todo">Todo</button>
+        </div>
+        
+        <!-- Edit list name input -->
         <span class="nameEdit" style="display: block">
           <input type="text" id="listName" placeholder="Name your list">
           <button id="listNameButton">Change list name</button>
         </span> 
+        
+        <!-- Display named list name -->
         <span class="nameDisplay" style="display: none; width: auto"><?
           ?><span class="listName" style="font-size: 1.5em"><?php 
             if(isset($_SESSION['list'])) { echo $_SESSION['list']->getName(); }
@@ -26,7 +37,9 @@ include 'inc/head.php';
           ?><a href="#"><img class="editNameIcon" src="img/edit.png"></a><?
           ?><a href="#"><img class="delListIcon" src="img/del.png"></a><?
         ?></span>     
-        <div>
+        
+        <!-- List div -->
+        <div class="list" <? if (isset($_SESSION['list'])) { echo 'id="'.$_SESSION['list']->getListType().'"'; } ?>>
           <ul class="list">
             <?php
               if(isset($_SESSION['list'])) {
@@ -41,12 +54,20 @@ include 'inc/head.php';
             ?>
           </ul>
         </div>
+        
+        <!-- Add item div -->
           <div>
-          <input type="text" class="addItemInput" oninput="getSuggestions()" onfocus="getSuggestions()" placeholder="Add item to list">
-          <button class="addItemButton">Add item</button>
+            <input type="text" 
+                   class="addItemInput" 
+
+                   placeholder="Add item to list">
+                   
+            <button class="addItemButton">Add item</button>
           </div>
         <div id="suggestionList"></div>
-      </div>        
+        
+        
+      </div> <!-- End of Container -->    
     </content>  
     <?php include 'inc/footer.php'; ?>  
   </div> <!-- End of Wrapper -->

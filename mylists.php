@@ -16,6 +16,8 @@ include 'inc/head.php';
 							echo '<a href="index.php?listid='.$list['id'].'">'.$list['name'].'</a>';
 							echo '&nbsp';
 							echo $list['datetime'];
+              echo '&nbsp';
+              echo $list['type'];
 							echo '</li>';
 						}
 					?>

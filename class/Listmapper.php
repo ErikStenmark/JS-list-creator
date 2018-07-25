@@ -16,27 +16,33 @@ class Listmapper {
 		$data['datetime'] = $datetime;
 
 		// Create list with list name
-		if ($value['type'] == 'name') {
-			$data['name'] = $value['name'];						// Get list name
+		if ($value['method'] == 'name') {
+      if(isset($value['type'])) {
+        $data['type'] = $value['type'];
+      }
+			$data['name'] = $value['name'];						        // Get list name
 			$data['id'] = $this->db->insert('lists', $data);	// Add list to DB
-			$listobject = new Checklist($data);					// Create list object
+			$listobject = new Checklist($data);					      // Create list object
 		}
 		
 		// Create list with list item
-		if ($value['type'] == 'item') {
-			
+		if ($value['method'] == 'item') {
+			if (isset($value['listType']) && $value['listType'] == 'grocery') {
+        $data['type'] = 'grocery';
+        $data['name'] = 'Grocery list';
+      }
 			// Create List
 			$data['id'] = $this->db->insert('lists', $data);	// Add unnamed list to DB
-			$listobject = new Checklist($data);					// Create list object
+			$listobject = new Checklist($data);					      // Create list object
 			
 			// Add item
-			unset($data['datetime']);							// Datetime cannot be set to listitems table
-			unset($data['id']);									// Unsets list ID for adding item
+			unset($data['datetime']);							            // Datetime cannot be set to listitems table
+			unset($data['id']);									              // Unsets list ID for adding item
 			$listobject = $this->add_item($listobject, $value);
 		}
 		
 		// Create list with both list name and item
-		if ($value['type'] == 'both'){
+		if ($value['method'] == 'both'){
 			$data['name'] = $value['listname'];
 			$data['id'] = $this->db->insert('lists', $data);
 			$listobject = new Checklist($data);
