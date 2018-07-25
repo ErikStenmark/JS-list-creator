@@ -15,14 +15,13 @@ const lis = listUl.children;
 
 
 // Hide name editing on already named list
-if(displayNameField != null) {
-  if (displayNameField.textContent != '') {
-    toggleNameEdit(false);
-    addItemInput.focus();
-  } else {
-    editNameInput.focus(); 
-  }
+if (nameSpan.textContent != '') {
+  toggleNameEdit(false);
+  addItemInput.focus();
+} else {
+  editNameInput.focus(); 
 }
+
 
 // Name list button event listener
 editNameButton.addEventListener('click', () => {
@@ -76,6 +75,10 @@ addItemButton.addEventListener('click', () => {
     if (editNameInput.value.replace(/\s/g, '').length) {
       ajax('both', [editNameInput.value, addItemInput.value]);
     } else {
+        if(editNameInput.value.replace(/\s/g, '').length == 0 && nameSpan.textContent == '') {
+          nameSpan.textContent = 'unnamed';
+          toggleNameEdit(false);
+        }
       ajax('ul', addItemInput.value);
     }
     suggestionList.innerHTML = '';
