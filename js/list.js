@@ -8,6 +8,8 @@ const displayNameField = document.querySelector('span.nameDisplay');
 const nameSpan = document.querySelector('span.listName');
 const editNameIcon = document.querySelector('img.editNameIcon');
 const delListIcon = document.querySelector('img.delListIcon');
+const displayNameType = document.querySelector('span#listtype');
+const displayNameDate = document.querySelector('span#listdate');
 const addItemInput = document.querySelector('input.addItemInput');
 const suggestionList = document.getElementById('suggestionList');
 const addItemButton = document.querySelector('button.addItemButton');
@@ -58,7 +60,7 @@ editNameButton.addEventListener('click', () => {
       ajax('both', [editNameInput.value, addItemInput.value]);
     } else {
       if (listType == 'grocery') {
-        ajax('namenewgrocery', editNameInput.value);
+        ajax('groceryname', editNameInput.value);
       } else {
         ajax('editname', editNameInput.value);
       }
@@ -108,7 +110,7 @@ addItemButton.addEventListener('click', () => {
           toggleNameEdit(false);
         }
       if (listType == 'grocery') {
-        ajax('addgroceryitem', addItemInput.value);
+        ajax('groceryitem', addItemInput.value);
       } else {
         ajax('ul', addItemInput.value);
       }

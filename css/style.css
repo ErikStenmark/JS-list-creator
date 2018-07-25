@@ -134,7 +134,16 @@ h1 {
 }
 
 .nameDisplay, .listName {
-	margin-bottom: 1.5em;
+	margin-bottom: .5em;
+}
+
+.nameDisplay + .listinfo {
+  margin-bottom: 2em;
+}
+
+.listinfo {
+  color: gray;
+  font-size: .9em;
 }
 
 .editNameIcon, .delListIcon {

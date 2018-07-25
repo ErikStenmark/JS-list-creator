@@ -44,7 +44,7 @@ if ($mode == 'create') {
      isset($_POST['item']) || 
      isset($_POST['both']) ||
      isset($_POST['groceryitem']) ||
-     isset($_POST['namenewgrocery'])) { 
+     isset($_POST['groceryname'])) { 
     
     // With list name
     if (isset($_POST['name'])) {
@@ -69,8 +69,8 @@ if ($mode == 'create') {
     }
     
     // Grocery list by renaming list
-    if (isset($_POST['namenewgrocery'])) {
-      $input = sanitize($_POST['namenewgrocery']);
+    if (isset($_POST['groceryname'])) {
+      $input = sanitize($_POST['groceryname']);
       $data = array (
         'method' => 'name',
         'name' => $input,
@@ -117,8 +117,8 @@ if ($mode == 'update') {
 	}
   
   // Renaming existing grocery list
-  if(isset($_POST['namenewgrocery'])) {
-    $input = sanitize($_POST['namenewgrocery']);
+  if(isset($_POST['groceryname'])) {
+    $input = sanitize($_POST['groceryname']);
 		$_SESSION['list'] = $listmapper->edit_list_name($_SESSION['list'], $input);
     echo $input;
   }

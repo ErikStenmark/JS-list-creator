@@ -50,6 +50,9 @@ class Checklist {
   
 	public function getListType() {
 		return $this->type;
+	}  
+	public function getListDate() {
+		return $this->datetime;
 	}
 	
 	public function getItems() {

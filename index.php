@@ -36,8 +36,12 @@ include 'inc/head.php';
             ?></span><?
           ?><a href="#"><img class="editNameIcon" src="img/edit.png"></a><?
           ?><a href="#"><img class="delListIcon" src="img/del.png"></a><?
-        ?></span>     
-        
+        ?></span>
+        <div class="listinfo">
+          <span id="listdate"><?php if (isset($_SESSION['list'])) { echo $_SESSION['list']->getListDate();}?></span>
+          <span id="listtype"><?php if (isset($_SESSION['list'])) { echo $_SESSION['list']->getListType();}?></span>
+        </div>
+
         <!-- List div -->
         <div class="list" <?php if (isset($_SESSION['list'])) { echo 'id="'.$_SESSION['list']->getListType().'"'; } ?>>
           <ul class="list">

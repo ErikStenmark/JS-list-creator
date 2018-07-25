@@ -16,10 +16,10 @@ function ajax(action, arg){
 		var vars = "item=" + JSON.stringify({name:arg, position:lis.length});
 	
   // Renaming grocery list with no items
-  } else if (action == 'namenewgrocery') { var vars ="namenewgrocery=" + arg;
+  } else if (action == 'groceryname') { var vars ="groceryname=" + arg;
     
   // Adding item with listType grocery (creates list if needed)
-  } else if (action == 'addgroceryitem') {
+  } else if (action == 'groceryitem') {
     var vars = "groceryitem=" + JSON.stringify({name:arg, position:lis.length});
     
 	// Adding name and item
@@ -49,7 +49,7 @@ function ajax(action, arg){
       if (action == 'ul') { addItem(return_data);
         
       // Editing list name
-      } if (action == 'editname' || action == 'namenewgrocery') {
+      } if (action == 'editname' || action == 'groceryname') {
         nameList(return_data);
       }
       
@@ -61,7 +61,7 @@ function ajax(action, arg){
       }
       
       // Creating grocery list or adding item
-      if (action == 'addgroceryitem') { addItem(return_data); }
+      if (action == 'groceryitem') { addItem(return_data); }
       
       // Creates ul in suggestion list and adds suggestions as li
       if (action == 'suggest') {
