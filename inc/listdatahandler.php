@@ -148,11 +148,9 @@ if (isset($_POST['dellist'])) {
     $listmapper->del_list($_SESSION['list']);
     unset($_SESSION['list']);
     unset($_SESSION['test']);
-    echo 'Del session recieved';
   }
   else if(is_integer((int)$_POST['dellist'])) {
     $listmapper->del_list($listmapper->get_saved_list($_POST['dellist']));
-	  echo 'Del id recieved';
   }
 }
 
