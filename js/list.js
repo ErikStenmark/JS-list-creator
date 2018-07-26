@@ -90,7 +90,7 @@ displayNameField.addEventListener('click', (event) => {
       while (listUl.firstChild) {
         listUl.removeChild(listUl.firstChild);
       }
-      window.location.replace("index.php");
+      setTimeout(() => { window.location.replace("index.php"); }, 100);
     }
   }
 });
