@@ -82,7 +82,7 @@ displayNameField.addEventListener('click', (event) => {
   // Del list
   if (event.target == delListIcon) {
     if (confirm("are you sure you want to delete this list?")) {
-      setTimeout((){ => aajax('dellist', 'session'); }, 0);
+      setTimeout(() => { ajax('dellist', 'session'); }, 0);
       nameSpan.textContent = '';
       editNameInput.value = '';
       displayNameField.style.display = 'none';
