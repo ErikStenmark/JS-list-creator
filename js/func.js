@@ -59,6 +59,10 @@ function ajax(action, arg){
         nameList(obj['listname']);
         addItem(obj['itemname']);
       }
+    
+      if (action == 'dellist') {
+      	console.log(return_data);
+      }
       
       // Creating grocery list or adding item
       if (action == 'groceryitem') { addItem(return_data); }
