@@ -17,6 +17,11 @@ const listDiv = document.querySelector('div.list');
 const listUl = document.querySelector('ul.list');
 const lis = listUl.children;
 
+
+function ifgrocery() {
+  
+}
+
 // Get type of list on loading saved list
 // listDiv gets id from PHP object
 let listType;
@@ -53,22 +58,6 @@ listTypeDiv.addEventListener('click', (e) => {
   toggleTypeEdit(false);
 });
 
-// Name list button event listener
-editNameButton.addEventListener('click', () => {
-  if(editNameInput.value.replace(/\s/g, '').length) {
-    if(addItemInput.value.replace(/\s/g, '').length) {
-      ajax('both', [editNameInput.value, addItemInput.value]);
-    } else {
-      if (listType == 'grocery') {
-        ajax('groceryname', editNameInput.value);
-      } else {
-        ajax('editname', editNameInput.value);
-      }
-    }
-  }
-  toggleTypeEdit(false);
-});
-
 // Click listener for list name buttons
 displayNameField.addEventListener('click', (event) => {
   
@@ -90,7 +79,6 @@ displayNameField.addEventListener('click', (event) => {
       while (listUl.firstChild) {
         listUl.removeChild(listUl.firstChild);
       }
-      setTimeout(() => { window.location.replace("index.php"); }, 1000);
     }
   }
 });
@@ -103,28 +91,62 @@ editNameField.addEventListener('keyup', (event) => {
   }
 });
 
-// Click listener for adding list item button
-addItemButton.addEventListener('click', () => {
-  if (addItemInput.value.replace(/\s/g, '').length) {
-    if (editNameInput.value.replace(/\s/g, '').length) {
-      ajax('both', [editNameInput.value, addItemInput.value]);
+function ifgrocery(type) {
+  if (type == 'name') {
+    if (listType == 'grocery') {
+      ajax('groceryname', editNameInput.value);
     } else {
-        if(editNameInput.value.replace(/\s/g, '').length == 0 && nameSpan.textContent == '') {
-          nameSpan.textContent = 'unnamed';
-          toggleNameEdit(false);
-        }
+      ajax('editname', editNameInput.value);
+    }
+  } else if (type == 'item') {
       if (listType == 'grocery') {
         ajax('groceryitem', addItemInput.value);
       } else {
         ajax('ul', addItemInput.value);
+    }
+  }
+}
+
+// Name list button event listener
+editNameButton.addEventListener('click', () => {
+  if(editNameInput.value.replace(/\s/g, '').length) {
+    if(addItemInput.value.replace(/\s/g, '').length) {
+      if(nameSpan.textContent == '') {
+        ajax('both', [editNameInput.value, addItemInput.value]);
+        addItemInput.value = '';
       }
+    }
+    ifgrocery('name');
+  }
+  if(nameSpan.textContent != '') {
+    toggleNameEdit(false); // [FixMe: Duplicate in nameList function (func.js) this line added for returning if user deletes value in field.
+    toggleTypeEdit(false);
+    addItemInput.focus();
+  }
+});
+
+// Click listener for adding list item button
+addItemButton.addEventListener('click', () => {
+  if (addItemInput.value.replace(/\s/g, '').length) {
+    if (editNameInput.value.replace(/\s/g, '').length) {
+      if (nameSpan.textContent == '') {
+        ajax('both', [editNameInput.value, addItemInput.value]);
+      } else {
+        ifgrocery('item');
+      }
+    } else {
+      ifgrocery('item');
+    }
+    if(editNameInput.value.replace(/\s/g, '').length == 0 && nameSpan.textContent == '') {
+        nameSpan.textContent = 'unnamed';
+        toggleNameEdit(false);
     }
     suggestionList.innerHTML = '';
     suggestionList.style.display = 'none';
     addItemInput.value = '';
     addItemInput.focus();
+    toggleTypeEdit(false);
   }
-  toggleTypeEdit(false);
 });
 
 // Click listener for list item buttons and check boxes

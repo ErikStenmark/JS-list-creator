@@ -79,6 +79,11 @@ function ajax(action, arg){
         options += '</ul>';
         suggestionList.innerHTML = options;
       }
+      
+      // Refresh page on DEL list
+      if (action == 'dellist' && arg == 'session') {
+        window.location.replace("index.php")
+      }
     }
 	}
     hr.send(vars);
@@ -88,6 +93,7 @@ function ajax(action, arg){
 function nameList(name) {
   nameSpan.innerHTML = name;
   toggleNameEdit(false);
+  toggleTypeEdit(false);
   addItemInput.focus();
 }
 
