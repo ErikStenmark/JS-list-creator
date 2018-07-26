@@ -71,14 +71,18 @@ editNameButton.addEventListener('click', () => {
 
 // Click listener for list name buttons
 displayNameField.addEventListener('click', (event) => {
+  
+  // Edit list name
   if (event.target == editNameIcon) {
     editNameInput.value = nameSpan.innerHTML;
     toggleNameEdit(true);
     editNameInput.focus();
   }
+  
+  // Del list
   if (event.target == delListIcon) {
     if (confirm("are you sure you want to delete this list?")) {
-      ajax('dellist', 'session');
+      setTimeout((){ => aajax('dellist', 'session'); }, 0);
       nameSpan.textContent = '';
       editNameInput.value = '';
       displayNameField.style.display = 'none';
