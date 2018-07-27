@@ -9,20 +9,13 @@ include 'inc/head.php';
 			<div class="container">	
 				<h1>My Lists</h1>
 				<p>All your saved lists</p>			
-				<ul class="list">
 					<?php 
-						foreach ($listmapper->get_saved_lists() as $list) {
-							echo '<li id="'.$list['id'].'">';
-							echo '<a href="index.php?listid='.$list['id'].'">'.$list['name'].'</a>';
-							echo '&nbsp';
-							echo $list['datetime'];
-              echo '&nbsp';
-              echo $list['type'];
-							echo '</li>';
-						}
+            $lists = $listmapper->get_saved_lists();
+            $render->render_lists($lists);
 					?>
 				</ul>		
-			</div>
+        <div id="clearfix"></div>
+      </div>
 		</content>	
 		<?php include 'inc/footer.php'; ?>
 	</div> <!-- End of Wrapper-->

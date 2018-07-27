@@ -17,5 +17,6 @@ if ( $_SESSION['logged_in_listapp'] != 1 ) {
 
 $db = new Dbh();
 $listmapper = new Listmapper($db, $_SESSION['id']);
+$render = new Render();
 
 ?>

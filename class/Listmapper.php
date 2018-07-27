@@ -145,7 +145,7 @@ class Listmapper {
 	
 	// Get saved lists
 	public function get_saved_lists() {
-		return $this->db->select('lists', $this->userid, 'userid');
+		return $this->db->select('lists', $this->userid, 'userid', null, 'datetime', true);
 	}
 	
 	// Get saved list

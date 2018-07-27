@@ -149,24 +149,22 @@ function attachListItemButtons(li) {
   remove.style.height = '1em';
   remove.src = 'img/del.png';
   span.appendChild(remove);
-  
-  if (pageId == 'list') {
-    let up = document.createElement('img');
-    up.className = 'up';
-    up.style.height = '1em';
-    up.src = 'img/up.png';
-    span.appendChild(up);
-    span.insertBefore(up, remove);
-    
-    let down = document.createElement('img');
-    down.className = 'down';
-    down.style.height = '1em';
-    down.src = 'img/down.png';
-    span.appendChild(down)
-    span.insertBefore(down, remove);
 
-    evalListButtons(li);
-  }
+  let up = document.createElement('img');
+  up.className = 'up';
+  up.style.height = '1em';
+  up.src = 'img/up.png';
+  span.appendChild(up);
+  span.insertBefore(up, remove);
+  
+  let down = document.createElement('img');
+  down.className = 'down';
+  down.style.height = '1em';
+  down.src = 'img/down.png';
+  span.appendChild(down)
+  span.insertBefore(down, remove);
+
+  evalListButtons(li);
 }
 
 // Get index of list item for position

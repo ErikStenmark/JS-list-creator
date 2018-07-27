@@ -33,7 +33,7 @@ class Dbh {
 		return $results;
 	}
 	
-	public function select($table, $value, $field = 'id', $what = null, $orderby = null) {
+	public function select($table, $value, $field = 'id', $what = null, $orderby = null, $desc = false) {
 		try {
 			if ($what == null) {
 				$sql = "SELECT * from $table WHERE $field = ?";
@@ -45,6 +45,9 @@ class Dbh {
 			}
 			if ($orderby != null) {
 				$sql .= " ORDER BY $orderby";
+        if ($desc == true) {
+          $sql .= " DESC";
+        }
 			}
 			$stmt = $this->connect()->prepare($sql);
 			$stmt->bindValue(1, $value);
