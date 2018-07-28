@@ -4,37 +4,33 @@ function ajax(action, arg){
     var hr = new XMLHttpRequest();
     var url = "inc/listdatahandler.php";
 	
+  // AJAX sends
+  
 	// Naming list
-	if (action == 'editname') { var vars = "name=" + arg;
-	
-	// Deleting list /item
-	} else if (action == 'dellist') { var vars = "dellist=" + arg;
-	} else if (action == 'delitem') { var vars = "delitem=" + arg;
-		
-	// Adding item to list
-	} else if (action == 'ul') {
-		var vars = "item=" + JSON.stringify({name:arg, position:lis.length});
-	
+	if (action == 'name') { var vars = "name=" + arg;
   // Renaming grocery list with no items
   } else if (action == 'groceryname') { var vars ="groceryname=" + arg;
-    
-  // Adding item with listType grocery (creates list if needed)
+	// Adding item to list
+	} else if (action == 'item') {
+		var vars = "item=" + 
+      JSON.stringify({name:arg, position:lis.length});
+  // Adding grocery item (creates list if needed)
   } else if (action == 'groceryitem') {
-    var vars = "groceryitem=" + JSON.stringify({name:arg, position:lis.length});
-    
-	// Adding name and item
+    var vars = "groceryitem=" + 
+      JSON.stringify({name:arg, position:lis.length});
+	// Adding name and item (Should only be possible when creating new list)
 	} else if (action == 'both') {
 		var vars = "both=" + 
       JSON.stringify({listname:arg[0], itemname:arg[1], position:lis.length});
-		
 	// Moving items
 	} else if (action == 'up') { var vars = "moveup=" + arg;		
 	} else if (action == 'down') { var vars = "movedown=" + arg;
-	
 	// Checking / unchecking item
 	} else if (action == 'check') { var vars = 'check=' + arg;
 	} else if (action == 'uncheck') { var vars = 'uncheck=' + arg;
-	
+	// Deleting list /item
+	} else if (action == 'dellist') { var vars = "dellist=" + arg;
+	} else if (action == 'delitem') { var vars = "delitem=" + arg;
   // Get/Del item suggestion
   } else if (action == 'suggest') { var vars = 'suggest=' + arg;
   } else if (action == 'delsuggestion') { var vars = 'delsuggestion=' + arg; }
@@ -44,26 +40,28 @@ function ajax(action, arg){
 	hr.onreadystatechange = function() {
     if(hr.readyState == 4 && hr.status == 200) {
       var return_data = hr.responseText;
-    
-      // Adding li item
-      if (action == 'ul') { addItem(return_data);
-        
+      
+      // Ajax return actions
+      
       // Editing list name
-      } if (action == 'editname' || action == 'groceryname') {
+       if (action == 'name' || action == 'groceryname') {
         nameList(return_data);
       }
-      
-      // Crating list with both name and item
+      // Adding item
+      if (action == 'item') {
+        addItem(return_data);
+      }
+      // Creating grocery list or adding item
+      if (action == 'groceryitem') { 
+        addItem(return_data); 
+      }
+      // Crating list with name and item
       if (action == 'both') {
         var obj = JSON.parse(return_data);
         nameList(obj['listname']);
         addItem(obj['itemname']);
       }
-      
-      // Creating grocery list or adding item
-      if (action == 'groceryitem') { addItem(return_data); }
-      
-      // Creates ul in suggestion list and adds suggestions as li
+      // Creates 'ul' in suggestion list div and adds suggestions as 'li's
       if (action == 'suggest') {
         var obj = JSON.parse(return_data);
         if(obj.length > 0) {
@@ -79,7 +77,6 @@ function ajax(action, arg){
         options += '</ul>';
         suggestionList.innerHTML = options;
       }
-      
       // Refresh page on DEL list
       if (action == 'dellist' && arg == 'session') {
         window.location.replace("index.php")
@@ -89,7 +86,7 @@ function ajax(action, arg){
     hr.send(vars);
 }
 
-// Front-end for naming list (no ajax)
+// Front-end for naming list (called from ajax)
 function nameList(name) {
   nameSpan.innerHTML = name;
   toggleNameEdit(false);
@@ -97,7 +94,7 @@ function nameList(name) {
   addItemInput.focus();
 }
 
-// Front-end for adding list item to list (ajax call not handeled here)
+// Front-end for adding list item to list (called from ajax)
 function addItem(name) {
   var ul = document.getElementsByTagName('ul')[0];
   var li = document.createElement('li');

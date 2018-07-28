@@ -96,13 +96,13 @@ function ifgrocery(type) {
     if (listType == 'grocery') {
       ajax('groceryname', editNameInput.value);
     } else {
-      ajax('editname', editNameInput.value);
+      ajax('name', editNameInput.value);
     }
   } else if (type == 'item') {
       if (listType == 'grocery') {
         ajax('groceryitem', addItemInput.value);
       } else {
-        ajax('ul', addItemInput.value);
+        ajax('item', addItemInput.value);
     }
   }
 }

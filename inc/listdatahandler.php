@@ -61,13 +61,6 @@ if ($mode == 'create') {
       $data = decode_item($_POST['item']);
     }
     
-    // With item when listType == 'grocery'
-    if (isset($_POST['groceryitem'])) {
-      $data = decode_item($_POST['groceryitem']);
-      $data['method'] = 'item';
-      $data['listType'] = 'grocery';
-    }
-    
     // Grocery list by renaming list
     if (isset($_POST['groceryname'])) {
       $input = sanitize($_POST['groceryname']);
@@ -78,7 +71,14 @@ if ($mode == 'create') {
       );
     }
     
-    // Todo list with both name and item
+    // With item when listType == 'grocery'
+    if (isset($_POST['groceryitem'])) {
+      $data = decode_item($_POST['groceryitem']);
+      $data['method'] = 'item';
+      $data['listType'] = 'grocery';
+    }
+    
+    // Todolist with both name and item
     if (isset($_POST['both'])) {
       $data = decode_item($_POST['both'], true);
     }
@@ -95,13 +95,6 @@ if ($mode == 'create') {
 
 // Update list
 if ($mode == 'update') {
-	// Adding item to list
-	if (isset($_POST['item'])) {
-		$data = decode_item($_POST['item']);
-		$listmapper->add_item($_SESSION['list'], $data);
-		echo $data['name'];
-	}
-  
 	// Editing list name
 	if (isset($_POST['name'])) {
 		$input = sanitize($_POST['name']);
@@ -109,9 +102,9 @@ if ($mode == 'update') {
 		echo $input;
 	}	
   
-	// Adding item to grocery list
-	if (isset($_POST['groceryitem'])) {
-		$data = decode_item($_POST['groceryitem']);
+	// Adding item to list
+	if (isset($_POST['item'])) {
+		$data = decode_item($_POST['item']);
 		$listmapper->add_item($_SESSION['list'], $data);
 		echo $data['name'];
 	}
@@ -122,6 +115,13 @@ if ($mode == 'update') {
 		$_SESSION['list'] = $listmapper->edit_list_name($_SESSION['list'], $input);
     echo $input;
   }
+  
+	// Adding item to grocery list
+	if (isset($_POST['groceryitem'])) {
+		$data = decode_item($_POST['groceryitem']);
+		$listmapper->add_item($_SESSION['list'], $data);
+		echo $data['name'];
+	}
 }
 
 // Moving item around
@@ -143,6 +143,10 @@ if (isset($_POST['uncheck'])) {
 }
 
 // Deleting list or item
+if (isset($_POST['delitem'])) {
+	$_SESSION['list'] = $listmapper->remove_item($_SESSION['list'], $_POST['delitem']);
+}
+
 if (isset($_POST['dellist'])) {
   if($_POST['dellist'] == 'session') {
     $listmapper->del_list($_SESSION['list']);
@@ -154,10 +158,7 @@ if (isset($_POST['dellist'])) {
   }
 }
 
-if (isset($_POST['delitem'])) {
-	$_SESSION['list'] = $listmapper->remove_item($_SESSION['list'], $_POST['delitem']);
-}
-
+// Suggestions
 if (isset($_POST['suggest'])) {
   $array = $listmapper->suggest_items($_POST['suggest']);
   echo json_encode($array);
