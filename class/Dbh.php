@@ -1,6 +1,4 @@
 <?php
-include 'Dbconf.php'; 
-
 class Dbh {
 
 	public function connect() {		
@@ -127,3 +125,4 @@ class Dbh {
 		}
 	}
 }
+?>

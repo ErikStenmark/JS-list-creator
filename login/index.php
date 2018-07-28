@@ -11,24 +11,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         require 'login.php';    
     }	
 }
+include '../inc/head.php';
 ?>
-
 <body>
-	<div>
-		<h1>Welcome</h1>
+	<div class="login">
 		<form action="index.php" id="loginform" method="post" autocomplete="off">		  
 		<input type="hidden" name="client" value="web">
 			<div class="input">
 			<div class="field-wrap">
 				<label>
 				Email / username:
-				</label><br>
+				</label>
 				<input type="text" required autocomplete="on" name="logname"/>
 			</div>
 			<div class="field-wrap">
 				<label>
 				  Password:
-				</label><br>
+				</label>
 			<input type="password" required autocomplete="current-password" name="password"/>
 		  </div>		  
 		  </div>

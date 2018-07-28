@@ -27,6 +27,32 @@ ul {
   list-style: none;
 }
 
+input[type=checkbox] {
+	transform:scale(1.2, 1.2);
+}
+
+input {
+  border: 1px solid #dcdcdc;
+  margin-right: 1em;
+}
+
+input[type]:not([type=checkbox]), button, #suggestionList {
+  font-size: .85em;
+  padding: .65em 1em;
+  border-radius: .3em;
+  outline: 0;
+  width: 200px;
+}
+
+button {
+  color: white;
+  background: #508abc;
+  border: solid 1px;
+  border-color: rgba(0, 0, 0, .1);
+  cursor: pointer;
+  width: 150px;
+}
+
 .wrapper {
    min-height:100%;
    position:relative;
@@ -34,6 +60,42 @@ ul {
 
 #clearfix {
   clear: both;
+}
+
+/******
+Login *
+******/
+
+.login {
+  text-align: center;
+  width: 300px;
+  height: 250px;
+  border: 1px solid black;
+  border-radius: .3em;
+  padding: 45px 20px 5px 20px;
+  background-color: #eee;
+  position:fixed;
+  left:0; right:0;
+  top:0; bottom:0;
+  margin:auto;
+  max-width:100%;
+  max-height:100%;
+  overflow:hidden;
+  box-shadow: 3px 3px 15px gray;
+}
+
+.login input {
+  margin-top: 1em;
+  border: 1px solid black;
+}
+
+.login button {
+  margin-top: 20px;
+}
+
+.login input {
+  text-align:center;
+  margin-bottom: 10px;
 }
 
 /*********
@@ -169,14 +231,6 @@ li {
   align-items: center;
 }
 
-input[type]:not([type=checkbox]), button, #suggestionList {
-  font-size: .85em;
-  padding: .65em 1em;
-  border-radius: .3em;
-  outline: 0;
-  width: 200px;
-}
-
 #suggestionList {
   border: 1px solid lightgray;
   display: none;
@@ -204,24 +258,6 @@ input[type]:not([type=checkbox]), button, #suggestionList {
 
 .selected {
   background: lightblue;
-}
-
-input[type=checkbox] {
-	transform:scale(1.2, 1.2);
-}
-
-input {
-  border: 1px solid #dcdcdc;
-  margin-right: 1em;
-}
-
-button {
-  color: white;
-  background: #508abc;
-  border: solid 1px;
-  border-color: rgba(0, 0, 0, .1);
-  cursor: pointer;
-  width: 150px;
 }
 
 .list { margin-bottom: 1.5em; }

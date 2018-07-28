@@ -4,15 +4,14 @@ A simple list creating app written in PHP / vanilla JavaScript and using a SQLit
 
 ----
 ## usage
-1. Create file: class/Dbconf.php
+1. Create file: inc/paths.php
 
-2. Add following code to file:
+2. Define paths shown in example below in inc/paths.php:
 ```php
 <?php
-// Enter correct Database Path:
+define('ROOT_PATH', 'http://localhost/');
 define('DB_PATH', $_SERVER['DOCUMENT_ROOT'] . '/db/model.db');
 ?>
+```
 
-3. Fix the path to the db file depending on where $_SERVER['DOCUMENT_ROOT'] is pointing to
-
-4. Log in with u: Test123 p: Test123
+3. If you are using model.db Log in with u: Test123 p: Test123
