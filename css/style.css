@@ -62,6 +62,7 @@ button {
   clear: both;
 }
 
+
 /******
 Login *
 ******/
@@ -97,6 +98,7 @@ Login *
   text-align:center;
   margin-bottom: 10px;
 }
+
 
 /*********
 * Navbar *
@@ -175,6 +177,7 @@ Login *
   display: block;
 }
 
+
 /**********
 * Content *
 **********/
@@ -183,6 +186,7 @@ Login *
 	margin: 3em 5em auto 5em;
 	padding-bottom: 10rem;
 }
+
 
 /***********
 * List-App *
@@ -291,6 +295,7 @@ li {
   cursor:pointer;
 }
 
+
 /*********
 My lists *
 *********/
@@ -323,6 +328,8 @@ My lists *
 #lists li div + div + div { margin-bottom: 0; }
 #lists li div img { float: right; width: 20px; }
 #lists .remove {cursor: pointer;}
+
+
 /*********
 * Footer *
 *********/

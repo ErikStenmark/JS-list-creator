@@ -18,10 +18,6 @@ const listUl = document.querySelector('ul.list');
 const lis = listUl.children;
 
 
-function ifgrocery() {
-  
-}
-
 // Get type of list on loading saved list
 // listDiv gets id from PHP object
 let listType;

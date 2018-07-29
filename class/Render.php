@@ -6,7 +6,7 @@ class Render {
 		return $day . '.' . $month . '.' . $year;
 	}
   
-  private function date_time_render($datetime) {
+  public function date_time_render($datetime) {
       $separate = explode(' ', $datetime);
       $date = $this->dateparse($separate[0]);
       $time = date('H:i', strtotime($separate[1]));
@@ -50,6 +50,17 @@ class Render {
     $grocerylists .= '</ul>';
     if($counttodo != 0) { echo $todolists; }
     if($countgrocery != 0) { echo $grocerylists; }
+  }
+  
+  public function render_list_items($array) {
+    if (!empty($array[0])) {
+      $html = '';
+      foreach ($array as $item) {
+        if ($item['checked']) {$checked = 'checked';} else {$checked = '';}
+        $html .= '<li><input type="checkbox"'.$checked.'>'.$item['item'].'</li>';
+      }
+      echo $html;
+    }
   }
 }
 ?>

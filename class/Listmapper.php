@@ -1,9 +1,7 @@
 <?php
-
 class Listmapper {
 	private $db;
 	private $userid;
-	private $listid = null;
 	
 	public function __construct($db, $userid) {
 		$this->db = $db;
@@ -175,5 +173,4 @@ class Listmapper {
     $this->db->del("dictionary", $id);
   }
 }
-
 ?>
