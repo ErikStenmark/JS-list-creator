@@ -121,9 +121,9 @@ const listName = (() => {
         typeSelector.setType('todo');
       }
       name = input;
-      displayEdit = false;
-      _render();
     }
+    displayEdit = false;
+    _render();
   }
   
   const delList = () => {
