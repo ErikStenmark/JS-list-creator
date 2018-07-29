@@ -17,7 +17,7 @@ include 'inc/head.php';
   <?php include 'inc/navbar.php'; ?>
   
     <content>
-      <div class="container">
+      <div class="container" id="listBuilder">
 
         <h1>List Builder</h1>
         <p>Build your list</p> 
@@ -29,22 +29,22 @@ include 'inc/head.php';
         </div>
 
         <!-- Edit list name input -->
-        <span class="nameEdit" style="display: block">
-          <input type="text" id="listName" placeholder="Name your list">
+        <div id="nameEdit" style="display: block">
+          <input type="text" id="listNameInput" placeholder="Name your list">
           <button id="listNameButton">Change list name</button>
-        </span> 
+        </div> 
 
         <!-- Display named list name -->
-        <span class="nameDisplay" style="display: none; width: auto"><?
+        <div id="nameDisplay" style="display: none; width: auto"><?
           ?><span class="listName" style="font-size: 1.5em"><?php 
             if(isset($_SESSION['list'])) {echo $listname;}
             ?></span><?
-          ?><a href="#"><img class="editNameIcon" src="img/edit.png"></a><?
-          ?><a href="#"><img class="delListIcon" src="img/del.png"></a><?
-        ?></span>
+          ?><a href="#"><img id="editNameIcon" src="img/edit.png"></a><?
+          ?><a href="#"><img id="delListIcon" src="img/del.png"></a><?
+        ?></div>
         
         <?php if (isset($_SESSION['list'])) { ?>
-        <div class="listinfo">
+        <div id="listinfo">
           <span id="listdate"><?php echo $listdate['date']; ?></span>
           <span id="listtime"><?php echo $listdate['time']; ?></span>
           <span id="listtype"><?php echo $listtype; ?></span>
@@ -52,8 +52,8 @@ include 'inc/head.php';
         <?php } ?> 
         
         <!-- List div -->
-        <div class="list" <?php if (isset($_SESSION['list'])) {echo 'id="'.$listtype.'"';} ?>>
-          <ul class="list">
+        <div id="list">
+          <ul class="list" <?php if (isset($_SESSION['list'])) {echo 'id="'.$listtype.'"';} ?>>
             <?php
               if(isset($_SESSION['list'])) {
                 $render->render_list_items($listitems);
@@ -63,13 +63,13 @@ include 'inc/head.php';
         </div>
 
         <!-- Add item div -->
-        <div>
+        <div id="addItem">
           <input type="text" 
-                 class="addItemInput" 
+                 id="addItemInput" 
                  placeholder="Add item to list">
-          <button class="addItemButton">Add item</button>
+          <button id="addItemButton">Add item</button>
         </div>
-        <div id="suggestionList"></div>
+        <div id="groceryItemSuggestions"></div>
 
 
       </div> <!-- End of Container -->    

@@ -209,20 +209,20 @@ Login *
   background-color: #25ceac;
 }
 
-.nameDisplay, .listName {
+#nameDisplay, .listName {
 	margin-bottom: .5em;
 }
 
-.nameDisplay + .listinfo {
+#nameDisplay + .listinfo {
   margin-bottom: 2em;
 }
 
-.listinfo {
+#listinfo {
   color: gray;
   font-size: .9em;
 }
 
-.editNameIcon, .delListIcon {
+#editNameIcon, #delListIcon {
 	margin-left: .5em;
   height: 1.5em;
   display: none;
@@ -266,28 +266,28 @@ li {
 
 .list { margin-bottom: 1.5em; }
 
-.list li:hover, 
-.nameDisplay:hover {
+#list li:hover, 
+#nameDisplay:hover {
   background-color: lightblue;
 }
 
-.list li:hover .listButtons, 
-.list li:hover .delListIcon {
+#list li:hover .listButtons, 
+#list li:hover .delListIcon {
   display: inline;
   height: 1em;
 }
 
-.nameDisplay:hover .editNameIcon, 
-.nameDisplay:hover .delListIcon {
+#nameDisplay:hover #editNameIcon, 
+#nameDisplay:hover #delListIcon {
   display: inline;
 }
 
-.list li span {
+#list li span {
 	display: none;
 	margin-left: auto;
 }
 
-.list li span img{
+#list li span img{
 	margin-right: 1em;
 }
 

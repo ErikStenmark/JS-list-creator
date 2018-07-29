@@ -1,4 +1,202 @@
-const body = document.querySelector('body');
+//********************
+// TypeSelector Module
+
+const typeSelector = (() => {
+  let type = null;
+  
+  // DOM Cache
+  const listBuilder = document.querySelector('div#listBuilder');
+  const typeSelector = listBuilder.querySelector('div.listTypeSelect');
+  const editNameSection = listBuilder.querySelector('div#nameEdit');
+  const displayNameSection = listBuilder.querySelector('div#nameDisplay');
+  const displayNameListName = listBuilder.querySelector('span.listName');
+
+  // Bind events
+  typeSelector.addEventListener('click', (event) => { setType(event); });
+  
+  // Private functions
+  const _render = () => {
+    if (type != null) {
+      typeSelector.style.display = 'none';
+      if(type == 'grocery') {
+        editNameSection.style.display = 'none';
+        displayNameListName.textContent = 'Grocery list';
+        displayNameSection.style.display = 'block';
+      }
+    }
+  }
+  
+  // Public functions
+  const setType = (e) => {
+    let val = (typeof e === "string") ? e : e.target.id;
+    if (val == 'grocery') {
+      type = 'grocery';
+    } else {
+      type = 'todo';
+    }
+    _render();
+  }
+  
+  const getType = () => {
+    return type;
+  }
+  
+  // Expose public functions
+  return {
+    setType: setType,
+    getType: getType
+  };
+  
+})();
+
+//****************
+// ListName Module
+
+const listName = (() => {
+  let name = null;
+  let displayEdit = true;
+
+  // Cache DOM
+  const listBuilder = document.querySelector('div#listBuilder');
+  const editNameSection = listBuilder.querySelector('div#nameEdit');
+  const editNameInput = editNameSection.querySelector('#listNameInput');
+  const editNameButton = editNameSection.querySelector('#listNameButton');
+  const displayNameSection = listBuilder.querySelector('div#nameDisplay');
+  const displayNameListName = displayNameSection.querySelector('span.listName');
+  const displayNameIcons = displayNameSection.getElementsByTagName('img');
+  const addItemSection = listBuilder.querySelector('div#addItem');
+  const addItemInput = addItemSection.querySelector('input#addItemInput'); 
+
+  
+  // Bind Events
+  editNameButton.addEventListener('click', () => { setName(); });
+  
+  for (let i = 0; i < displayNameIcons.length; i++) {
+    displayNameIcons[i].addEventListener('click', (event) => { _editOrDel(event); });
+  }
+
+  // Private functions
+  const _render = () => {
+    if (name != null) {
+      displayNameListName.textContent = name;
+    }
+    if (displayEdit == false) {
+      editNameSection.style.display = 'none';
+      displayNameSection.style.display = 'block';
+    } else {
+      editNameSection.style.display = 'block';
+      displayNameSection.style.display = 'none';
+      if (name != null) {
+        editNameInput.value = name;
+        editNameInput.focus();
+      }
+    }
+  }
+  
+  const _getName = () => {
+    if (displayNameListName.textContent != '') {
+      name = displayNameListName.textContent;
+    }
+  }
+  
+  const _editOrDel = (event) => {
+    if (event.target.id == 'editNameIcon') {
+      toggleEditName(true);
+    }
+    if (event.target.id == 'delListIcon') {
+      delList();
+    }
+  }
+  
+  // Public functions
+  const setName = (input) => {
+    input = input || null;   
+    if (input == null) {
+      if (editNameInput.value.replace(/\s/g, '').length) {
+        input = editNameInput.value;
+      }
+    }
+    if (input != null) {
+      if (typeSelector.type == null) {
+        typeSelector.setType('todo');
+      }
+      name = input;
+      displayEdit = false;
+      _render();
+    }
+  }
+  
+  const delList = () => {
+    // ToDo...
+  }
+  
+  const toggleEditName = (bool) => {
+    displayEdit = bool;
+    (bool == true) ? _getName() : null;
+    _render();
+  }
+  
+  // Expose public functions
+  return {
+    setName: setName,
+    toggleEditName: toggleEditName,
+    delList: delList
+  }
+  
+})();
+  
+  // })()
+
+
+/* (function() {
+
+  const listCreator = {
+    listType: null,
+    
+    init: function() {
+      this.cacheDom();
+    },
+    
+    cacheDom: function() {
+      this.listBuilder = document.querySelector('div#listBuilder');
+      this.typeSelector = listBuilder.querySelector('div.listTypeSelect');
+      
+      this.editNameSection = listBuilder.querySelector('div#nameEdit');
+      this.editNameInput = editNameSection.querySelector('#listNameInput');
+      this.editNameButton = editNameSection.querySelector('#listNameButton');
+      
+      this.displayNameSection = listBuilder.querySelector('div#nameDisplay');
+      this.displayNameListName = displayNameSection.querySelector('span.listName');
+      this.displayNameIcons = displayNameSection.getElementsByTagName('img');
+      
+      this.listInfo = listBuilder.querySelector('div#listinfo');
+      this.listInfoDate = listInfo.querySelector('span#listdate');
+      this.listInfoTime = listInfo.querySelector('span#listtime');
+      this.listInfoType = listInfo.querySelector('span#listtype');
+      
+      this.listDiv = listBuilder.querySelector('div#list');
+      this.listUL = listDiv.querySelector('ul');
+      this.listItems = listUL.children;
+      
+      this.addItemSection = listBuilder.querySelector('div#addItem');
+      this.addItemInput = addItemSection.querySelector('input#addItemInput');
+      this.addItemButton = addItemSection.querySelector('button#addItemButton');
+      this.addItemSuggestions = addItemSection.querySelector('#groceryItemSuggestions');
+    },
+    
+    render: function(action) {
+      if(action == 'selecttype') {
+        
+      }
+      
+    }
+  };
+
+  listCreator.init();
+  
+})() */
+
+/* const body = document.querySelector('body');
 
 const listTypeDiv = document.querySelector('div.listTypeSelect');
 const editNameField = document.querySelector('span.nameEdit');
@@ -310,3 +508,4 @@ function addSuggestAttributes() {
     addItemInput.setAttributeNode(att1);
     addItemInput.setAttributeNode(att2);
 }
+ */
