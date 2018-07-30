@@ -1,7 +1,7 @@
 //********************
 // TypeSelector Module
 
-const typeSelector = (() => {
+const TypeSelector = (() => {
   let type = null;
   
   // DOM Cache
@@ -49,10 +49,11 @@ const typeSelector = (() => {
   
 })();
 
+
 //****************
 // ListName Module
 
-const listName = (() => {
+const ListName = (() => {
   let name = null;
   let displayEdit = true;
 
@@ -70,7 +71,6 @@ const listName = (() => {
   
   // Bind Events
   editNameButton.addEventListener('click', () => { setName(); });
-  
   for (let i = 0; i < displayNameIcons.length; i++) {
     displayNameIcons[i].addEventListener('click', (event) => { _editOrDel(event); });
   }
@@ -117,13 +117,17 @@ const listName = (() => {
       }
     }
     if (input != null) {
-      if (typeSelector.type == null) {
-        typeSelector.setType('todo');
+      if (TypeSelector.type == null) {
+        TypeSelector.setType('todo');
       }
       name = input;
     }
     displayEdit = false;
     _render();
+  }
+  
+  const getName = () => {
+    return name;
   }
   
   const delList = () => {
@@ -139,11 +143,192 @@ const listName = (() => {
   // Expose public functions
   return {
     setName: setName,
+    getName: getName,
     toggleEditName: toggleEditName,
     delList: delList
   }
   
 })();
+  
+
+//************
+// Item module
+
+const Items = (() => {
+  let itemsArray = [];
+  
+  // Cache DOM
+  const listBuilder = document.querySelector('div#listBuilder');
+  const addItemSection = listBuilder.querySelector('div#addItem');
+  const addItemInput = addItemSection.querySelector('input#addItemInput');
+  const addItemButton = addItemSection.querySelector('button#addItemButton');
+  const addItemSuggestions = addItemSection.querySelector('#groceryItemSuggestions');
+  const editNameSection = listBuilder.querySelector('div#nameEdit');
+  const editNameInput = editNameSection.querySelector('#listNameInput');
+  const listDiv = listBuilder.querySelector('div#list');
+  const listUl = listDiv.querySelector('ul');
+  const listItems = listUl.children;
+  
+  // Bind Events
+  addItemButton.addEventListener('click', () => {addItem();});
+  listUl.addEventListener('click', (event) => {listItemAction(event);});
+  
+  // Private functions
+  const _render = () => {
+    listUl.innerHTML = '';
+    for (let i = 0; i < itemsArray.length; i++) {
+      let li = document.createElement('li');
+      li.textContent = itemsArray[i].name;
+      let text = '<input type="checkbox" class="checkbox">';
+      li.insertAdjacentHTML('afterbegin', text);
+      _addItemButtons(li);
+      listUl.appendChild(li);
+    }
+
+      _evalListButtons();
+
+  }
+  
+  const _addItemButtons = (li) => {
+    
+    let span = document.createElement('span');
+    span.className = 'listButtons';
+    
+    let remove = document.createElement('img');
+    remove.className = 'remove';
+    remove.style.height = '1em';
+    remove.src = 'img/del.png';
+    span.appendChild(remove);
+
+    let up = document.createElement('img');
+    up.className = 'up';
+    up.style.height = '1em';
+    up.src = 'img/up.png';
+    span.appendChild(up);
+    span.insertBefore(up, remove);
+    
+    let down = document.createElement('img');
+    down.className = 'down';
+    down.style.height = '1em';
+    down.src = 'img/down.png';
+    span.appendChild(down)
+    span.insertBefore(down, remove);
+
+    li.appendChild(span);
+  }
+  
+  const _evalListButtons = (li) => {
+    for (i=0; i<listItems.length; i++) {
+    
+      let li = listItems[i];
+      let buttons = li.querySelector('span.listButtons');
+      let up = buttons.querySelector('img.up');
+      let down = buttons.querySelector('img.down');  
+      
+      if (li == li.parentNode.firstElementChild) {
+        up.style.display = 'none';
+      } else {
+        up.style.display = 'inline';
+      }	
+      if (li == li.parentNode.lastElementChild) {
+        down.style.display = 'none';
+      } else {
+        down.style.display = 'inline';
+      }
+    }
+  }
+  
+  const _getIndex = (sender) => {   
+    var liElements = sender.parentNode.getElementsByTagName("li");
+    var liElementsLength = liElements.length;
+    var index;
+    for (var i = 0; i < liElementsLength; i++) {
+      if (liElements[i] == sender) {
+          index = i;
+          return(index);
+      }
+    }
+  }
+  
+  const _array_move = (arr, old_index, new_index) => {
+    while (old_index < 0) {
+        old_index += arr.length;
+    }
+    while (new_index < 0) {
+        new_index += arr.length;
+    }
+    if (new_index >= arr.length) {
+        var k = new_index - arr.length + 1;
+        while (k--) {
+            arr.push(undefined);
+        }
+    }
+    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+  }
+  
+  // Public functions
+  const addItem = (string) => {
+    string = string || addItemInput.value;
+    if (string.replace(/\s/g, '').length) {
+      itemsArray.push({position: itemsArray.length, name : string});
+      if (ListName.getName() == null) {ListName.setName('unnamed')}
+      _render();
+      addItemInput.value = '';
+      addItemInput.focus();
+    }
+  }
+  
+  const listItemAction = (event) => {
+    
+    /* // Check boxes
+    if (event.target.type == 'checkbox') {
+      let li = event.target.parentNode;
+      let position = getIndex(li);
+      if( event.target.checked) {
+        ajax('check', position);
+      } else {
+        ajax('uncheck', position);
+      }
+    } */
+    
+    // Buttons
+    if (event.target.tagName == 'IMG') {
+      let li = event.target.parentNode.parentNode;
+      let position = getIndex(li);
+
+      if (event.target.className == 'remove') {
+        itemsArray.splice(position, 1);
+      }		
+      
+      if (event.target.className == 'up') {
+        let prevLi = li.previousElementSibling;
+        if (prevLi) {
+          _array_move(itemsArray, position, position -1);
+        }	
+      }		
+      
+      if (event.target.className == 'down') {
+        let nextLi = li.nextElementSibling;
+        if (nextLi) {
+          _array_move(itemsArray, position, position +1)
+        }
+        document.body.style.cursor='default';
+      }
+      _render();
+      _evalListButtons();
+    }
+  }
+  
+// Expose public functions
+  return {
+    itemsArray: itemsArray,
+    addItem: addItem
+  }
+})();
+  
+  
+
+  
   
   // })()
 
