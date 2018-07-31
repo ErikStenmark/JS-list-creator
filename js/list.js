@@ -1,7 +1,7 @@
-//********************
-// TypeSelector Module
+//**********************
+// TypeSelector Module *
 
-const TypeSelector = (() => {
+const typeSelector = (() => {
   let type = null;
   
   // DOM Cache
@@ -10,53 +10,47 @@ const TypeSelector = (() => {
   const editNameSection = listBuilder.querySelector('div#nameEdit');
   const displayNameSection = listBuilder.querySelector('div#nameDisplay');
   const displayNameListName = listBuilder.querySelector('span.listName');
-
-  // Bind events
-  typeSelector.addEventListener('click', (event) => { setType(event); });
   
-  // Private functions
-  const _render = () => {
+  // DOM events
+  typeSelector.addEventListener('click', (event) => { setType(event); });
+  // PubSub events
+  events.on('nameGiven', checkType);
+  events.on('itemAdded', checkType);
+  
+  // Functions
+  function render() {
     if (type != null) {
       typeSelector.style.display = 'none';
-      if(type == 'grocery') {
-        editNameSection.style.display = 'none';
-        displayNameListName.textContent = 'Grocery list';
-        displayNameSection.style.display = 'block';
-      }
     }
   }
   
-  // Public functions
-  const setType = (e) => {
+  function checkType() {
+    if(type == null) {
+      setType('todo');
+    }
+  }
+
+  function setType(e) {
     let val = (typeof e === "string") ? e : e.target.id;
     if (val == 'grocery') {
       type = 'grocery';
-    } else {
+    } else if(val == 'todo') {
       type = 'todo';
     }
-    _render();
+    events.emit('typeSelected', type);
+    render();
   }
-  
-  const getType = () => {
-    return type;
-  }
-  
-  // Expose public functions
-  return {
-    setType: setType,
-    getType: getType
-  };
   
 })();
 
 
-//****************
-// ListName Module
+//******************
+// ListName Module *
 
-const ListName = (() => {
+const listName = (() => {
   let name = null;
   let displayEdit = true;
-
+  
   // Cache DOM
   const listBuilder = document.querySelector('div#listBuilder');
   const editNameSection = listBuilder.querySelector('div#nameEdit');
@@ -65,18 +59,18 @@ const ListName = (() => {
   const displayNameSection = listBuilder.querySelector('div#nameDisplay');
   const displayNameListName = displayNameSection.querySelector('span.listName');
   const displayNameIcons = displayNameSection.getElementsByTagName('img');
-  const addItemSection = listBuilder.querySelector('div#addItem');
-  const addItemInput = addItemSection.querySelector('input#addItemInput'); 
-
   
-  // Bind Events
+  // DOM events
   editNameButton.addEventListener('click', () => { setName(); });
   for (let i = 0; i < displayNameIcons.length; i++) {
-    displayNameIcons[i].addEventListener('click', (event) => { _editOrDel(event); });
+    displayNameIcons[i].addEventListener('click', (event) => { editOrDel(event); });
   }
-
-  // Private functions
-  const _render = () => {
+  // PubSub events
+  events.on('typeSelected', checkNameType); 
+  events.on('itemAdded', checkNameItem);
+  
+  // Functions
+  function render() {
     if (name != null) {
       displayNameListName.textContent = name;
     }
@@ -93,13 +87,7 @@ const ListName = (() => {
     }
   }
   
-  const _getName = () => {
-    if (displayNameListName.textContent != '') {
-      name = displayNameListName.textContent;
-    }
-  }
-  
-  const _editOrDel = (event) => {
+  function editOrDel(event) {
     if (event.target.id == 'editNameIcon') {
       toggleEditName(true);
     }
@@ -108,8 +96,19 @@ const ListName = (() => {
     }
   }
   
-  // Public functions
-  const setName = (input) => {
+  function checkNameType(type) {
+    if(type == 'grocery' && name == null) {
+      setName('Grocery list');
+    }
+  }  
+  
+  function checkNameItem() {
+    if(name == null) {
+      setName('unnamed');
+    }
+  }
+
+  function setName(input) {
     input = input || null;   
     if (input == null) {
       if (editNameInput.value.replace(/\s/g, '').length) {
@@ -117,45 +116,30 @@ const ListName = (() => {
       }
     }
     if (input != null) {
-      if (TypeSelector.type == null) {
-        TypeSelector.setType('todo');
-      }
+      events.emit('nameGiven', input);
       name = input;
     }
     displayEdit = false;
-    _render();
+    render();
   }
   
-  const getName = () => {
-    return name;
-  }
-  
-  const delList = () => {
+  function delList() {
     // ToDo...
   }
   
-  const toggleEditName = (bool) => {
+  function toggleEditName(bool) {
     displayEdit = bool;
-    (bool == true) ? _getName() : null;
-    _render();
-  }
-  
-  // Expose public functions
-  return {
-    setName: setName,
-    getName: getName,
-    toggleEditName: toggleEditName,
-    delList: delList
+    render();
   }
   
 })();
   
 
-//************
-// Item module
+//******************
+// Add item module *
 
-const Items = (() => {
-  let itemsArray = [];
+const addItem = (() => {
+  let listType = null;
   
   // Cache DOM
   const listBuilder = document.querySelector('div#listBuilder');
@@ -163,33 +147,67 @@ const Items = (() => {
   const addItemInput = addItemSection.querySelector('input#addItemInput');
   const addItemButton = addItemSection.querySelector('button#addItemButton');
   const addItemSuggestions = addItemSection.querySelector('#groceryItemSuggestions');
-  const editNameSection = listBuilder.querySelector('div#nameEdit');
-  const editNameInput = editNameSection.querySelector('#listNameInput');
+  
+  // DOM events
+  addItemButton.addEventListener('click', () => {addItem();});
+  // PubSub events
+  events.on('typeSelected', setType);
+  
+  // Functions
+  function render() {
+    //Suggestions
+  }
+
+  function setType(type) {
+    listType = type;
+  }
+  
+  function addItem(string) {
+    string = string || addItemInput.value;
+    if (string.replace(/\s/g, '').length) {
+      events.emit('itemAdded', string);
+      addItemInput.value = '';
+      addItemInput.focus();
+    }
+  }
+  
+})();
+  
+
+//*******************
+// List item module *
+
+const listItem = (() => {
+  let itemsArray = [];
+  
+  // Cache DOM
+  const listBuilder = document.querySelector('div#listBuilder');
   const listDiv = listBuilder.querySelector('div#list');
   const listUl = listDiv.querySelector('ul');
   const listItems = listUl.children;
   
-  // Bind Events
-  addItemButton.addEventListener('click', () => {addItem();});
-  listUl.addEventListener('click', (event) => {listItemAction(event);});
+  // DOM events
+  listUl.addEventListener('click', (event) => {itemAction(event);});
+  // PubSub events
+  events.on('itemAdded', newItem);
   
-  // Private functions
-  const _render = () => {
+  //Functions
+  function render() {
     listUl.innerHTML = '';
     for (let i = 0; i < itemsArray.length; i++) {
       let li = document.createElement('li');
       li.textContent = itemsArray[i].name;
-      let text = '<input type="checkbox" class="checkbox">';
-      li.insertAdjacentHTML('afterbegin', text);
-      _addItemButtons(li);
+      addItemButtons(li);
       listUl.appendChild(li);
     }
-
-      _evalListButtons();
-
+    if (listItems.length > 0) {
+      evalListButtons();
+    }
   }
   
-  const _addItemButtons = (li) => {
+  function addItemButtons(li) {
+    let text = '<input type="checkbox" class="checkbox">';
+    li.insertAdjacentHTML('afterbegin', text);
     
     let span = document.createElement('span');
     span.className = 'listButtons';
@@ -217,7 +235,7 @@ const Items = (() => {
     li.appendChild(span);
   }
   
-  const _evalListButtons = (li) => {
+  function evalListButtons() {
     for (i=0; i<listItems.length; i++) {
     
       let li = listItems[i];
@@ -238,47 +256,12 @@ const Items = (() => {
     }
   }
   
-  const _getIndex = (sender) => {   
-    var liElements = sender.parentNode.getElementsByTagName("li");
-    var liElementsLength = liElements.length;
-    var index;
-    for (var i = 0; i < liElementsLength; i++) {
-      if (liElements[i] == sender) {
-          index = i;
-          return(index);
-      }
-    }
+  function newItem(item){
+    itemsArray.push({position: itemsArray.length, name : item});
+    render();
   }
   
-  const _array_move = (arr, old_index, new_index) => {
-    while (old_index < 0) {
-        old_index += arr.length;
-    }
-    while (new_index < 0) {
-        new_index += arr.length;
-    }
-    if (new_index >= arr.length) {
-        var k = new_index - arr.length + 1;
-        while (k--) {
-            arr.push(undefined);
-        }
-    }
-    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
-  }
-  
-  // Public functions
-  const addItem = (string) => {
-    string = string || addItemInput.value;
-    if (string.replace(/\s/g, '').length) {
-      itemsArray.push({position: itemsArray.length, name : string});
-      if (ListName.getName() == null) {ListName.setName('unnamed')}
-      _render();
-      addItemInput.value = '';
-      addItemInput.focus();
-    }
-  }
-  
-  const listItemAction = (event) => {
+  function itemAction(event) {
     
     /* // Check boxes
     if (event.target.type == 'checkbox') {
@@ -303,38 +286,54 @@ const Items = (() => {
       if (event.target.className == 'up') {
         let prevLi = li.previousElementSibling;
         if (prevLi) {
-          _array_move(itemsArray, position, position -1);
+          array_move(itemsArray, position, position -1);
         }	
       }		
       
       if (event.target.className == 'down') {
         let nextLi = li.nextElementSibling;
         if (nextLi) {
-          _array_move(itemsArray, position, position +1)
+          array_move(itemsArray, position, position +1)
         }
         document.body.style.cursor='default';
       }
-      _render();
-      _evalListButtons();
+      render();
     }
   }
   
-// Expose public functions
-  return {
-    itemsArray: itemsArray,
-    addItem: addItem
+  function getIndex(sender) {   
+    var liElements = sender.parentNode.getElementsByTagName("li");
+    var liElementsLength = liElements.length;
+    var index;
+    for (var i = 0; i < liElementsLength; i++) {
+      if (liElements[i] == sender) {
+          index = i;
+          return(index);
+      }
+    }
   }
+  
+  function array_move(arr, old_index, new_index) {
+    while (old_index < 0) {
+      old_index += arr.length;
+    }
+    while (new_index < 0) {
+      new_index += arr.length;
+    }
+    if (new_index >= arr.length) {
+      var k = new_index - arr.length + 1;
+      while (k--) {
+          arr.push(undefined);
+      }
+    }
+    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+  }
+  
 })();
-  
-  
-
-  
-  
-  // })()
 
 
-/* (function() {
-
+ 
+/*
   const listCreator = {
     listType: null,
     
