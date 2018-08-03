@@ -68,6 +68,7 @@ const listName = (() => {
   // PubSub events
   events.on('typeSelected', checkNameType); 
   events.on('itemAdded', checkNameItem);
+  events.on('ajax_name', ajaxReturnName);
   
   // Functions
   function render() {
@@ -98,7 +99,9 @@ const listName = (() => {
   
   function checkNameType(type) {
     if(type == 'grocery' && name == null) {
-      setName('Grocery list');
+      name = 'Grocery list';
+      displayEdit = false;
+      render();
     }
   }  
   
@@ -109,6 +112,7 @@ const listName = (() => {
   }
 
   function setName(input) {
+    
     input = input || null;   
     if (input == null) {
       if (editNameInput.value.replace(/\s/g, '').length) {
@@ -117,9 +121,14 @@ const listName = (() => {
     }
     if (input != null) {
       events.emit('nameGiven', input);
-      name = input;
+      // name = input;
     }
     displayEdit = false;
+    // render();
+  }
+  
+  function ajaxReturnName(string) {
+    name = string;
     render();
   }
   
@@ -132,6 +141,14 @@ const listName = (() => {
     render();
   }
   
+  function getName() {
+    return name;
+  }
+  
+  return {
+    getName:getName
+  }
+  
 })();
   
 
@@ -140,6 +157,8 @@ const listName = (() => {
 
 const addItem = (() => {
   let listType = null;
+  let listLength = 0;
+  
   
   // Cache DOM
   const listBuilder = document.querySelector('div#listBuilder');
@@ -151,21 +170,19 @@ const addItem = (() => {
   // DOM events
   addItemButton.addEventListener('click', () => {addItem();});
   // PubSub events
-  events.on('typeSelected', setType);
+  events.on('typeSelected', (type)=>{listType = type;});
+  events.on('ajax_item_added', ()=>{listLength++});
   
   // Functions
   function render() {
     //Suggestions
   }
-
-  function setType(type) {
-    listType = type;
-  }
   
   function addItem(string) {
     string = string || addItemInput.value;
     if (string.replace(/\s/g, '').length) {
-      events.emit('itemAdded', string);
+      let item = JSON.stringify({name:string, position:listLength});
+      events.emit('itemAdded', item);
       addItemInput.value = '';
       addItemInput.focus();
     }
@@ -189,7 +206,7 @@ const listItem = (() => {
   // DOM events
   listUl.addEventListener('click', (event) => {itemAction(event);});
   // PubSub events
-  events.on('itemAdded', newItem);
+  events.on('ajax_item_added', newItem);
   
   //Functions
   function render() {
@@ -332,7 +349,143 @@ const listItem = (() => {
 })();
 
 
- 
+//**************
+// AJAX Module *
+
+const ajax = (() => {
+  let type = null;
+  
+  // PubSub events
+  events.on('typeSelected', typeSelected);
+  events.on('nameGiven', nameChanged);
+  events.on('itemAdded', itemAdded);
+  
+  function run(action, arg) {
+    arg = arg || 0;
+      var hr = new XMLHttpRequest();
+      var url = "inc/listdatahandler.php";
+    
+    // AJAX sends
+    
+    // Naming list
+    if (action == 'name') { var vars = "name=" + arg;
+    // Renaming grocery list with no items
+    } else if (action == 'groceryname') { var vars ="groceryname=" + arg;
+    // Adding item to list
+    } else if (action == 'item') {
+      var vars = "item=" + arg;
+    // Adding grocery item (creates list if needed)
+    } else if (action == 'groceryitem') {
+      var vars = "groceryitem=" + arg;
+    // Adding name and item (Should only be possible when creating new list)
+    // } else if (action == 'both') {
+      // var vars = "both=" + 
+        // JSON.stringify({listname:arg[0], itemname:arg[1], position:lis.length});
+    // Moving items
+    } else if (action == 'up') { var vars = "moveup=" + arg;		
+    } else if (action == 'down') { var vars = "movedown=" + arg;
+    // Checking / unchecking item
+    } else if (action == 'check') { var vars = 'check=' + arg;
+    } else if (action == 'uncheck') { var vars = 'uncheck=' + arg;
+    // Deleting list /item
+    } else if (action == 'dellist') { var vars = "dellist=" + arg;
+    } else if (action == 'delitem') { var vars = "delitem=" + arg;
+    // Get/Del item suggestion
+    } else if (action == 'suggest') { var vars = 'suggest=' + arg;
+    } else if (action == 'delsuggestion') { var vars = 'delsuggestion=' + arg; }
+    
+    hr.open("POST", url, true);
+    hr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    hr.onreadystatechange = function() {
+      if(hr.readyState == 4 && hr.status == 200) {
+        var return_data = hr.responseText;
+        
+        // Ajax return actions
+        
+        // Editing list name
+         if (action == 'name' || action == 'groceryname') {
+          events.emit('ajax_name', return_data);
+        }
+        // Adding item
+        if (action == 'item' || action == 'groceryitem') {
+          events.emit('ajax_item_added', return_data);
+        }
+        // Creating grocery list or adding item
+        // if (action == 'groceryitem') { 
+          // addItem(return_data); 
+        // }
+        // Crating list with name and item
+        // if (action == 'both') {
+          // var obj = JSON.parse(return_data);
+          // nameList(obj['listname']);
+          // addItem(obj['itemname']);
+        // }
+        // Creates 'ul' in suggestion list div and adds suggestions as 'li's
+        // if (action == 'suggest') {
+          // var obj = JSON.parse(return_data);
+          // if(obj.length > 0) {
+            // suggestionList.style.display = 'block';
+          // } else {
+            // suggestionList.style.display = 'none';
+          // }
+          // var options ='<ul>';
+          // for (let i = 0; i < obj.length; i++) {
+            // options += '<li id="'+obj[i].id+'" name="'+obj[i].name+'">' +obj[i].name+ 
+                       // '<a class="delsuggestion" id="'+obj[i].id+'">del</a></li>';
+          // }
+          // options += '</ul>';
+          // suggestionList.innerHTML = options;
+        // }
+        // Refresh page on DEL list
+        // if (action == 'dellist' && arg == 'session') {
+          // window.location.replace("index.php")
+        // }
+      }
+    }
+    hr.send(vars);
+  }
+  
+  function typeSelected(string) {
+    type = string;
+  }
+  
+  function nameChanged(name) {
+    setTimeout(() => {
+      console.log(type);
+      console.log(name);
+      if(type == 'todo') {
+        run('name', name);
+      } else if(type == 'grocery') {
+        run('groceryname', name);
+      }
+    },0);
+  }
+  
+  function itemAdded(item) {
+    setTimeout(() => {
+      if(type == 'todo') {
+        run('item', item);
+      } else if(type == 'grocery') {
+        run('groceryitem', item);
+      }
+    },1);
+  }
+  
+  function getType() {
+    return type;
+  }
+  
+  return {
+    getType:getType
+  }
+  
+})();
+  
+  
+
+
+
+
 /*
   const listCreator = {
     listType: null,
