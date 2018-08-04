@@ -68,8 +68,8 @@ include 'inc/head.php';
                  id="addItemInput" 
                  placeholder="Add item to list">
           <button id="addItemButton">Add item</button>
+          <div id="suggestionList"><ul></ul></div>
         </div>
-        <div id="groceryItemSuggestions"></div>
 
 
       </div> <!-- End of Container -->    

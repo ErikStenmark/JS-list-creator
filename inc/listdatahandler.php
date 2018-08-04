@@ -125,21 +125,17 @@ if ($mode == 'update') {
 }
 
 // Moving item around
-if (isset($_POST['moveup'])) { 
-	$_SESSION['list'] = $listmapper->move_item($_SESSION['list'], $_POST['moveup'], 'up');
+if (isset($_POST['move'])) { 
+	$_SESSION['list'] = $listmapper->move_item($_SESSION['list'], json_decode($_POST['move'], true));
 }
 
-if (isset($_POST['movedown'])) { 
-	$_SESSION['list'] = $listmapper->move_item($_SESSION['list'], $_POST['movedown'], 'down');
-}
+// if (isset($_POST['movedown'])) { 
+	// $_SESSION['list'] = $listmapper->move_item($_SESSION['list'], $_POST['movedown'], 'down');
+// }
 
 // Checking item
-if (isset($_POST['check'])) {
-	$_SESSION['list'] = $listmapper->check_item($_SESSION['list'], $_POST['check'], 'check');
-}
-
-if (isset($_POST['uncheck'])) {
-	$_SESSION['list'] = $listmapper->check_item($_SESSION['list'], $_POST['uncheck'], 'uncheck');
+if (isset($_POST['checkbox'])) {
+	$_SESSION['list'] = $listmapper->check_item($_SESSION['list'], json_decode($_POST['checkbox'], true));
 }
 
 // Deleting list or item

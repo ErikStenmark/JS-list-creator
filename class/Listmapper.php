@@ -111,26 +111,20 @@ class Listmapper {
 	}
 
 	// Move item position
-	public function move_item($listobject, $itemoldposition, $direction) {
-		if($direction == 'up') {
-			$listitemsarray = $listobject->moveItem($itemoldposition, 'up');
+	public function move_item($listobject, $array) {
+		if($array['direction'] == 'up') {
+			$listitemsarray = $listobject->moveItem($array['position'], 'up');
 		} else {
-			$listitemsarray = $listobject->moveItem($itemoldposition, 'down');
+			$listitemsarray = $listobject->moveItem($array['position'], 'down');
 		}
 		$this->db_update_item_positions($listitemsarray);
 		return $listobject;
 	}
 	
 	// Check item
-	public function check_item($listobject, $itemposition, $action) {
-		if ($action == 'check') {
-			$data['checked'] = 1;
-			$itemid = $listobject->checkItem($itemposition, 'check');
-		} else {
-			$data['checked'] = 0;
-			$itemid = $listobject->checkItem($itemposition, 'uncheck');
-		}
-		$this->db->update('listitems', $itemid, $data);
+	public function check_item($listobject, $array) {
+    $itemid = $listobject->checkItem($array['index'], (int)$array['bool']);
+		$this->db->update('listitems', $itemid, array('checked' => (int)$array['bool']));
 		return $listobject;
 	}
 	

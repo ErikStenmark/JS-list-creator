@@ -60,11 +60,8 @@ class Checklist {
 	}
 	
 	public function checkItem($itemposition, $action) {
-		if ($action == 'check') {
-			$this->items[$itemposition]['checked'] = 1;
-		} else {
-			$this->items[$itemposition]['checked'] = 0;
-		}
+			$this->items[$itemposition]['checked'] = $action;
+      
 		return $this->items[$itemposition]['id'];
 	}
 	
