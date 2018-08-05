@@ -30,10 +30,6 @@ function decode_item($json, $listname = false) {
 	if ($listname == false) {
 		$data['method'] = 'item';
 		$data['name'] = sanitize($data['name']);
-	} else {
-		$data['method'] = 'both';
-		$data['listname'] = sanitize($data['listname']);
-		$data['itemname'] = sanitize($data['itemname']);
 	}
 	return $data;
 }
@@ -42,7 +38,6 @@ function decode_item($json, $listname = false) {
 if ($mode == 'create') {
   if(isset($_POST['name']) || 
      isset($_POST['item']) || 
-     isset($_POST['both']) ||
      isset($_POST['groceryitem']) ||
      isset($_POST['groceryname'])) { 
     
@@ -78,18 +73,8 @@ if ($mode == 'create') {
       $data['listType'] = 'grocery';
     }
     
-    // Todolist with both name and item
-    if (isset($_POST['both'])) {
-      $data = decode_item($_POST['both'], true);
-    }
-    
-    $_SESSION['list'] = $listmapper->create_list($data, $datetime);
-    
-    if (isset($_POST['both'])) {
-      echo json_encode(array('listname' => $data['listname'], 'itemname' => $data['itemname']));
-    } else {
-      echo $data['name'];
-    }
+    $_SESSION['list'] = $listmapper->create_list($data, $datetime); 
+    echo $data['name'];
   }
 }
 
@@ -128,10 +113,6 @@ if ($mode == 'update') {
 if (isset($_POST['move'])) { 
 	$_SESSION['list'] = $listmapper->move_item($_SESSION['list'], json_decode($_POST['move'], true));
 }
-
-// if (isset($_POST['movedown'])) { 
-	// $_SESSION['list'] = $listmapper->move_item($_SESSION['list'], $_POST['movedown'], 'down');
-// }
 
 // Checking item
 if (isset($_POST['checkbox'])) {

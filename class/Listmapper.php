@@ -38,18 +38,7 @@ class Listmapper {
 			unset($data['id']);									              // Unsets list ID for adding item
 			$listobject = $this->add_item($listobject, $value);
 		}
-		
-		// Create list with both list name and item
-		if ($value['method'] == 'both'){
-			$data['name'] = $value['listname'];
-			$data['id'] = $this->db->insert('lists', $data);
-			$listobject = new Checklist($data);
-			$data['name'] = $value['itemname'];
-			$data['position'] = $value['position'];
-			unset($data['datetime']);
-			unset($data['id']);	
-			$listobject = $this->add_item($listobject, $data);
-		}
+    
 		return $listobject;
 	}
 	
@@ -64,16 +53,19 @@ class Listmapper {
 	
 	// Add list item (item id to list class)
 	public function add_item($listobject, $item) {
+		$listType = $listobject->getListType();
 		$data['listid'] = $listobject->getId();
 		$data['userid'] = $this->userid;
 		$data['position'] = $item['position'];
 		$data['item'] = $item['name'];
 		$itemid = $this->db->insert('listitems', $data);
-		try {
-			$this->db->insert('dictionary', array('name' => $data['item'], 'userid' => $data['userid']), true);
-		} catch (PDOException $e) {
-			return $e;
-		}
+    if($listType == 'grocery') {
+      try {
+        $this->db->insert('dictionary', array('name' => $data['item'], 'userid' => $data['userid']), true);
+      } catch (PDOException $e) {
+        return $e;
+      }
+    }
 		$data['items'] = array(	
 			'id' => $itemid,
 			'position' => $item['position'],
@@ -128,7 +120,7 @@ class Listmapper {
 		return $listobject;
 	}
 	
-	// Delete list (unset list class from session)
+	// Delete list (unset list class from session!)
 	public function del_list($listobject) {
 		$listid = $listobject->getId();
 		$this->db->del('listitems', $listid, 'listid');
@@ -152,6 +144,7 @@ class Listmapper {
 		}
 	}
   
+  // Get suggestions from dictionary table
   public function suggest_items($string) {
     $var = $string.'%';
     $sql = "SELECT * from dictionary WHERE userid = ? AND name LIKE ?";
@@ -163,6 +156,7 @@ class Listmapper {
     return $result;
   }
   
+  // Delete suggestion from dictionary table
   public function del_suggestion($id) {
     $this->db->del("dictionary", $id);
   }
