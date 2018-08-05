@@ -1,5 +1,3 @@
-//events - a super-basic Javascript (publish subscribe) pattern
-
 const events = {
   events: {},
   on: function (eventName, fn) {
