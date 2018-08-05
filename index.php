@@ -77,6 +77,7 @@ include 'inc/head.php';
     <?php include 'inc/footer.php'; ?>  
   </div> <!-- End of Wrapper -->
   <script src="js/pubsub.js"></script>
+  <script src="js/ajax.js"></script>
   <script src="js/list.js"></script>
 </body>
 </html>

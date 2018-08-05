@@ -213,7 +213,7 @@ Login *
 	margin-bottom: .5em;
 }
 
-#nameDisplay + .listinfo {
+#nameDisplay + #listinfo {
   margin-bottom: 2em;
 }
 
@@ -292,6 +292,7 @@ li {
 }
 
 .listButtons img {
+  height: 1em;
   cursor:pointer;
 }
 
