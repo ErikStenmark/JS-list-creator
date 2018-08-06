@@ -265,10 +265,7 @@
     
     function enterPressed() {
       if (selection.length) {
-        addItemInput.value = selection[0].getAttribute('name');
-        selection[0].className = '';
-        suggestionsObj = {}
-        render();
+        selection[0].click();
       }
       else if (addItemInputFocus && selection.length == 0) {
         addItemButton.click();
@@ -276,8 +273,8 @@
     }
     
     function upPressed(event) {
+      event.preventDefault();
       if(displaySuggestions) {
-        event.preventDefault();
         if(selection.length == 0) {
           suggestionUl.lastChild.className = 'selected';
         } else {
@@ -287,12 +284,14 @@
             prevselection.className = 'selected';
           }
         }
+      } else {
+        getSuggestions();
       }
     }
     
     function downPressed(event) {
+      event.preventDefault();
       if(displaySuggestions) {
-        event.preventDefault();
         if(selection.length == 0) {
           suggestionUl.firstChild.className = 'selected';
         } else {
@@ -302,6 +301,8 @@
             nextselection.className = 'selected';
           }
         }
+      } else {
+        getSuggestions();
       }
     }
     
@@ -322,7 +323,9 @@
     function chooseOrDelSug(event) {
        if (event.target.tagName == 'LI') {
         addItemInput.value = event.target.getAttribute('name');
-        getSuggestions();
+        selection[0].className = '';
+        suggestionsObj = {}
+        render();
       }
       if (event.target.tagName == 'A') {
         let id = event.target.id;
