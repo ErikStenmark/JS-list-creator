@@ -12,6 +12,7 @@
     events.on('itemAdded', itemAdd);
     events.on('itemChecked', itemCheck);
     events.on('itemMoved', itemMove);
+    events.on('itemDragged', itemMove);
     events.on('itemDeleted', itemDelete);
     events.on('listDeleted', listDelete);
     events.on('getSuggestions', getSuggestions);
@@ -65,6 +66,11 @@
             var obj = JSON.parse(return_data);
             events.emit('ajax_suggest', obj);
           }
+          
+          if(action == 'move') {
+            console.log(return_data);
+          }
+          
         }
       }
       hr.send(vars);

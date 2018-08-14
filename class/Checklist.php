@@ -74,18 +74,21 @@ class Checklist {
 	}
 	
 	public function moveItem($itemposition, $direction) {
-		if ($direction == 'up') {
-			$this->items[$itemposition]['position']--;
-			$this->items[$itemposition - 1]['position']++;
-		} else {
-			$this->items[$itemposition]['position']++;
-			$this->items[$itemposition + 1]['position']--;
-		}
-		foreach ($this->items as $k => $v) {
-			$newarr[$v['position']] = $this->items[$k];
-		}
-		$this->items = $newarr;
-		ksort($this->items);
+    $out = array_splice($this->items, $itemposition, 1);
+		if ($direction === 'up') {
+      array_splice($this->items, $itemposition-1, 0, $out);
+      // return 'up';;
+		} else if ($direction === 'down') {
+			array_splice($this->items, $itemposition+1, 0, $out);
+      // return 'down';
+		} else if (is_int($direction)) {
+      array_splice($this->items, $direction, 0, $out);
+      // return 'drag';
+    }
+    $len = count($this->items);
+    for ($i = 0; $i < $len; $i++) {
+      $this->items[$i]['position'] = $i;
+    }
 		return $this->items;
 	}
 }

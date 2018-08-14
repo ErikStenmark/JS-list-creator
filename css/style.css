@@ -228,11 +228,15 @@ Login *
   display: none;
 }
 
+ul {
+  box-sizing: border-box;
+}
+
 li {
-  padding: .45em .5em;
-  margin-bottom: .35em;
+  padding: .6em .5em .6em;
   display: flex;
   align-items: center;
+  border: 2px solid transparent;
 }
 
 #suggestionList {
@@ -294,6 +298,10 @@ li {
 .listButtons img {
   height: 1em;
   cursor:pointer;
+}
+
+.drag-hold {
+  border: 2px solid lime;
 }
 
 

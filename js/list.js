@@ -348,7 +348,7 @@
     }
     
   })();
-    
+
 
   //*******************
   // List item module *
@@ -380,6 +380,7 @@
     // PubSub events
     events.on('ajax_item_added', newItem);
     events.on('listDeleted', reset);
+    events.on('itemDragged', moveItem);
     
     //Functions
     function render() {
@@ -454,14 +455,14 @@
       // Check boxes
       if (event.target.type == 'checkbox') {
         let li = event.target.parentNode;
-        let position = getIndex(li);
+        let position = sharedFunctions.getIndex(li);
         itemsArray[position].checked = event.target.checked;
         events.emit('itemChecked', JSON.stringify({index: getIndex(li), bool: event.target.checked}));
       }
       // Buttons
       if (event.target.tagName == 'IMG') {
         let li = event.target.parentNode.parentNode;
-        let position = getIndex(li);
+        let position = sharedFunctions.getIndex(li);
 
         if (event.target.className == 'remove') {
           itemsArray.splice(position, 1);
@@ -487,16 +488,11 @@
       }
     }
     
-    function getIndex(sender) {   
-      var liElements = sender.parentNode.getElementsByTagName("li");
-      var liElementsLength = liElements.length;
-      var index;
-      for (var i = 0; i < liElementsLength; i++) {
-        if (liElements[i] == sender) {
-            index = i;
-            return(index);
-        }
-      }
+    function moveItem(json) {
+      obj = JSON.parse(json);
+      array_move(itemsArray, obj['position'], obj['direction']);
+      render();
+      events.emit('itemsRendered');
     }
     
     function array_move(arr, old_index, new_index) {
@@ -528,7 +524,7 @@
 
   const keyboard = (() => {
     
-    // cache DOM
+    // Cache DOM
     const listBuilder = document.querySelector('div#listBuilder');
     
     // DOM Events
@@ -543,4 +539,125 @@
     }
     
   })();
+  
+  //**************
+  // Drag & drop *
+  
+  const dragAndDrop = (() => {
+    let dragging = null;
+    let dragStartIndex = null;
+    let dragEndIndex = null;
+    
+    // Cache DOM
+    const listBuilder = document.querySelector('div#listBuilder');
+    const listDiv = listBuilder.querySelector('div#list');
+    const listUl = listDiv.querySelector('ul');
+    const listItems = listUl.children;
+    
+    // DOM events
+    listUl.addEventListener('dragstart', (event) => {dragStart(event)});
+    listUl.addEventListener('dragleave', (event) => {dragLeave(event)});
+    listUl.addEventListener('dragover', (event) => {dragOver(event)});
+    listUl.addEventListener('dragend', (event) => {dragEnd(event)});
+    listUl.addEventListener('drop', (event) => {dragDrop(event)});
+    
+    // PubSub events
+    events.on('ajax_item_added', render);
+    events.on('itemMoved', render);
+    events.on('itemsRendered', render);
+    
+    // Functions
+    function render() {
+      setTimeout(() => {
+        for (let i = 0; i<listItems.length; i++) {
+          listItems[i]['draggable'] = 'true';
+        }
+      },0);
+    }
+    
+    function dragStart(event) {
+      if(event.target.tagName == 'LI') {
+        dragging = event.target;
+        dragStartIndex = sharedFunctions.getIndex(event.target);
+        event.dataTransfer.setData('text/html', dragging);
+        event.target.classList.add('drag-hold');
+      }
+    }    
+    
+    function dragLeave(event) {
+      if(event.target.tagName == 'LI') {
+        event.target.style['border-bottom'] = '';
+        event.target.style['border-top'] = '';
+      }
+    }
+    
+    function dragOver(event) {
+      event.preventDefault();
+      if(event.target.tagName == 'LI') {
+        var bounding = event.target.getBoundingClientRect()
+        var offset = bounding.y + (bounding.height/2);
+        if ( event.clientY - offset > 0 && event.target == event.target.parentNode.lastChild) {
+          event.target.style['border-bottom'] = 'solid 2px blue';
+          event.target.style['border-top'] = '';
+        } else {
+          event.target.style['border-top'] = 'solid 2px blue';
+          event.target.style['border-bottom'] = '';
+        }
+      }
+    }
+    
+    function dragEnd(event) {
+      event.target.classList.remove('drag-hold');
+    }
+    
+    function dragDrop(event) {
+      event.preventDefault();
+      if(event.target.tagName == 'LI') {
+        if ( event.target.style['border-bottom'] !== '' ) {
+          event.target.style['border-bottom'] = '';
+          dragEndIndex = sharedFunctions.getIndex(event.target.parentNode.lastChild);
+        } else {
+          event.target.style['border-top'] = '';
+          if (event.target == event.target.parentNode.firstChild) {
+            dragEndIndex = 0; 
+          } else {
+            if (sharedFunctions.getIndex(event.target) > dragStartIndex) {
+              dragEndIndex = sharedFunctions.getIndex(event.target)-1; 
+            } else {
+              dragEndIndex = sharedFunctions.getIndex(event.target); 
+            }
+          }
+        }
+        events.emit('itemDragged', JSON.stringify({position: dragStartIndex, direction: dragEndIndex}));
+      }
+    }
+    
+    // Init
+    render();
+    
+  })();
+  
+  //*******************
+  // Shared functions *
+  
+  const sharedFunctions = (() => {
+    
+    function getIndex(item) {   
+      var liElements = item.parentNode.getElementsByTagName("li");
+      var liElementsLength = liElements.length;
+      var index;
+      for (var i = 0; i < liElementsLength; i++) {
+        if (liElements[i] == item) {
+            index = i;
+            return(index);
+        }
+      }
+    }
+    
+    return {
+      getIndex:getIndex
+    }
+    
+  })();
+  
 })();

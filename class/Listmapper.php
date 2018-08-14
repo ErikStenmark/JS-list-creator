@@ -104,10 +104,12 @@ class Listmapper {
 
   // Move item position
   public function move_item($listobject, $array) {
-    if($array['direction'] == 'up') {
+    if($array['direction'] === 'up') {
       $listitemsarray = $listobject->moveItem($array['position'], 'up');
-    } else {
+    } else if ($array['direction'] === 'down') {
       $listitemsarray = $listobject->moveItem($array['position'], 'down');
+    } else if (is_int($array['direction'])) {
+      $listitemsarray = $listobject->moveItem($array['position'], $array['direction']);
     }
     $this->db_update_item_positions($listitemsarray);
     return $listobject;
