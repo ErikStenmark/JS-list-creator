@@ -65,12 +65,7 @@
           if (action == 'suggest') {
             var obj = JSON.parse(return_data);
             events.emit('ajax_suggest', obj);
-          }
-          
-          if(action == 'move') {
-            console.log(return_data);
-          }
-          
+          }          
         }
       }
       hr.send(vars);
