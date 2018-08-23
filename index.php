@@ -15,8 +15,7 @@ include 'inc/head.php';
 <body id="list">
   <div class="wrapper">
   <?php include 'inc/navbar.php'; ?>
-  
-    <content>
+    <main>
       <div class="container" id="listBuilder">
 
         <h1>List Builder</h1>
@@ -71,9 +70,8 @@ include 'inc/head.php';
           <div id="suggestionList"><ul></ul></div>
         </div>
 
-
       </div> <!-- End of Container -->    
-    </content>  
+    </main>  
     <?php include 'inc/footer.php'; ?>  
   </div> <!-- End of Wrapper -->
   <script src="js/pubsub.js"></script>

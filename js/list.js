@@ -42,7 +42,8 @@
       selection : selection
     }
   })();
-  
+
+
   //**********************
   // TypeSelector Module *
 
@@ -207,7 +208,7 @@
       render();
     }
   })();
-  
+
 
   //******************
   // Add item module *
@@ -527,8 +528,8 @@
       render();
     }
   })();
-  
-  
+
+
   //**************
   // Drag & drop *
   
@@ -618,8 +619,8 @@
     // Init
     render();
   })();
-  
-  
+
+
   //******************
   // Keyboard module *
 
@@ -636,8 +637,8 @@
       if(event.keyCode === 46) { events.emit('delKey', event); }
     }
   })();
-  
-  
+
+
   //*******************
   // Shared functions *
   

@@ -5,7 +5,7 @@ include 'inc/head.php';
 <body id="lists">
 	<div class="wrapper">
 		<?php include 'inc/navbar.php'; ?>		
-		<content>
+		<main>
 			<div class="container">	
 				<h1>My Lists</h1>
 				<p>All your saved lists</p>			
@@ -17,7 +17,7 @@ include 'inc/head.php';
           </div>
         <div id="clearfix"></div>
       </div>
-		</content>	
+		</main>	
 		<?php include 'inc/footer.php'; ?>
 	</div> <!-- End of Wrapper-->
   <script src="js/pubsub.js"></script>
